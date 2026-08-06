@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Guía Nikon">
+<meta name="theme-color" content="#ffffff">
+<title>Guía Nikon D3300</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  :root{
+    --bg:#ffffff;--bg2:#f5f5f3;--bg3:#efefed;
+    --text:#1a1a1a;--text2:#666;--text3:#999;
+    --border:#e0e0dc;--border2:#c8c8c4;
+    --accent:#2563eb;--accent-bg:#eff6ff;--accent-text:#1d4ed8;
+    --success-bg:#f0fdf4;--success-text:#15803d;
+    --warning-bg:#fffbeb;--warning-text:#92400e;
+    --danger-bg:#fef2f2;--danger-text:#b91c1c;
+    --radius:10px;
+  }
+  @media(prefers-color-scheme:dark){
+    :root{
+      --bg:#1a1a1a;--bg2:#252525;--bg3:#2e2e2e;
+      --text:#f0f0ee;--text2:#aaa;--text3:#666;
+      --border:#333;--border2:#444;
+      --accent:#3b82f6;--accent-bg:#1e3a5f;--accent-text:#93c5fd;
+      --success-bg:#14432a;--success-text:#4ade80;
+      --warning-bg:#3d2e00;--warning-text:#fcd34d;
+      --danger-bg:#3d1212;--danger-text:#f87171;
+    }
+  }
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;font-size:16px;overflow:hidden;}
+  #app{display:flex;flex-direction:column;height:100%;height:100dvh;}
+
+  /* TAB BAR */
+  #tabbar{display:flex;overflow-x:auto;padding:8px 8px 0;gap:6px;background:var(--bg);border-bottom:0.5px solid var(--border);flex-shrink:0;scrollbar-width:none;}
+  #tabbar::-webkit-scrollbar{display:none;}
+  .tab{flex-shrink:0;padding:6px 14px;border-radius:20px;border:0.5px solid var(--border);font-size:13px;font-weight:500;cursor:pointer;background:transparent;color:var(--text2);white-space:nowrap;transition:all .15s;}
+  .tab.active{background:var(--text);color:var(--bg);border-color:var(--text);}
+
+  /* CONTENT */
+  #content{flex:1;overflow-y:auto;padding:14px;-webkit-overflow-scrolling:touch;}
+
+  /* SCENE CARDS */
+  .scene-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;}
+  .scene-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:3px;}
+  .scene-sub{font-size:12px;color:var(--text2);margin-bottom:12px;}
+  .lente-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;margin-bottom:10px;font-weight:500;}
+  .lente-35{background:var(--success-bg);color:var(--success-text);}
+  .lente-zoom{background:var(--warning-bg);color:var(--warning-text);}
+  .params{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+  .param{background:var(--bg);border:0.5px solid var(--border);border-radius:8px;padding:8px;text-align:center;}
+  .param-role{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;}
+  .p1{color:var(--accent);}
+  .p2{color:#92400e;}
+  .p3{color:var(--text3);}
+  .param-name{font-size:10px;color:var(--text2);margin-bottom:2px;}
+  .param-val{font-size:17px;font-weight:600;color:var(--text);}
+  .param-why{font-size:10px;color:var(--text3);margin-top:2px;line-height:1.3;}
+  .af-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+  .af-chip{background:var(--bg);border:0.5px solid var(--border);border-radius:8px;padding:7px 8px;}
+  .af-chip-label{font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
+  .af-chip-val{font-size:11px;color:var(--text);font-weight:500;}
+  .fixes{border-top:0.5px solid var(--border);padding-top:10px;}
+  .fix-title{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px;}
+  .fix{display:flex;align-items:flex-start;gap:6px;margin-bottom:6px;}
+  .fix-trigger{font-size:11px;font-weight:600;color:var(--text);min-width:110px;flex-shrink:0;}
+  .fix-arr{color:var(--accent);font-weight:700;flex-shrink:0;}
+  .fix-action{font-size:11px;color:var(--text2);line-height:1.4;}
+
+  /* QUICK START */
+  .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+  .quick-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center;}
+  .quick-icon{font-size:24px;margin-bottom:6px;}
+  .quick-label{font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px;}
+  .quick-val{font-size:19px;font-weight:700;color:var(--text);line-height:1.1;margin-bottom:1px;}
+  .quick-param{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;}
+  .quick-af{font-size:10px;color:var(--text2);padding-top:7px;border-top:0.5px solid var(--border);line-height:1.5;}
+  .quick-note{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:11px 13px;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:8px;}
+  .quick-note b{color:var(--text);font-weight:600;}
+
+  /* CHEAT TABLE */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius);border:0.5px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px;}
+  th{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text3);padding:8px;text-align:left;border-bottom:0.5px solid var(--border);background:var(--bg2);}
+  td{padding:8px;border-bottom:0.5px solid var(--border);color:var(--text2);vertical-align:top;line-height:1.4;}
+  td:first-child{font-weight:500;color:var(--text);}
+  tr:last-child td{border-bottom:none;}
+  .prio{display:inline-block;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:600;margin-right:2px;}
+  .prio-1{background:var(--accent-bg);color:var(--accent-text);}
+  .prio-2{background:var(--warning-bg);color:var(--warning-text);}
+  .prio-3{background:var(--bg3);color:var(--text3);border:0.5px solid var(--border);}
+
+  /* HACKS */
+  .hack-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:13px;margin-bottom:10px;}
+  .hack-num{font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+  .hack-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+  .hack-body{font-size:13px;color:var(--text2);line-height:1.6;}
+  .hack-example{margin-top:8px;background:var(--bg);border-radius:6px;padding:8px 10px;font-size:12px;color:var(--text2);border-left:2px solid var(--accent);line-height:1.5;}
+
+  /* ACCORDION (params + faq) */
+  .acc-item{border:0.5px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;}
+  .acc-q{width:100%;text-align:left;padding:12px 14px;background:var(--bg2);border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .acc-q-text{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;}
+  .acc-icon{font-size:20px;color:var(--text3);flex-shrink:0;transition:transform .2s;line-height:1;}
+  .acc-icon.open{transform:rotate(45deg);}
+  .acc-body{display:none;padding:12px 14px;border-top:0.5px solid var(--border);background:var(--bg);}
+  .acc-body.open{display:block;}
+  .ref-row{display:flex;gap:0;margin-bottom:6px;align-items:flex-start;}
+  .ref-val{font-size:13px;font-weight:600;color:var(--text);min-width:80px;flex-shrink:0;padding:3px 8px 3px 0;}
+  .ref-meaning{font-size:12px;color:var(--text2);padding:3px 0;line-height:1.4;flex:1;}
+  .ref-tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px;vertical-align:middle;white-space:nowrap;font-weight:500;}
+  .tag-g{background:var(--success-bg);color:var(--success-text);}
+  .tag-a{background:var(--warning-bg);color:var(--warning-text);}
+  .tag-r{background:var(--danger-bg);color:var(--danger-text);}
+  .tag-b{background:var(--accent-bg);color:var(--accent-text);}
+  .faq-step{display:flex;gap:8px;margin-top:8px;align-items:flex-start;}
+  .faq-step-num{width:20px;height:20px;border-radius:50%;background:var(--accent-bg);color:var(--accent-text);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .faq-step-text{font-size:13px;color:var(--text2);line-height:1.5;}
+  .faq-step-text b{color:var(--text);font-weight:600;}
+  .faq-note{margin-top:10px;background:var(--bg2);border-radius:6px;padding:8px 10px;font-size:12px;color:var(--text2);line-height:1.5;}
+
+  /* FAQ CATS */
+  .faq-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+  .faq-cat{padding:4px 12px;border-radius:20px;border:0.5px solid var(--border);font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--text2);}
+  .faq-cat.active{background:var(--bg2);color:var(--text);border-color:var(--border2);}
+
+  /* DIAGNOSTICO */
+  .diag-q{font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px;}
+  .diag-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .diag-btn{padding:14px 10px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--bg2);cursor:pointer;text-align:center;}
+  .diag-btn.selected{border-color:var(--accent);background:var(--accent-bg);}
+  .diag-btn-icon{font-size:22px;margin-bottom:4px;}
+  .diag-btn-label{font-size:13px;font-weight:500;color:var(--text);}
+  .diag-btn.selected .diag-btn-label{color:var(--accent-text);}
+  .diag-result{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;}
+  .diag-result-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:10px;}
+  .diag-fix{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;}
+  .diag-fix-num{width:22px;height:22px;border-radius:50%;background:var(--accent-bg);color:var(--accent-text);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .diag-fix-text{font-size:13px;color:var(--text2);line-height:1.5;}
+  .diag-fix-text b{color:var(--text);font-weight:600;}
+  .diag-reset{margin-top:10px;font-size:13px;color:var(--accent);cursor:pointer;background:none;border:none;padding:0;font-weight:500;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="tabbar"></div>
+  <div id="content"></div>
+</div>
+
+<script>
+const scenes=[
+  {id:'sol',label:'Sol directo',sub:'Pleno mediodía o luz dura sin sombra',lente:'35mm',params:[{role:'p1',roleLabel:'① protagonista',name:'Velocidad',val:'1/800',why:'Tanta luz te permite subirla sin perder exposición'},{role:'p2',roleLabel:'② secundario',name:'Apertura',val:'f/5.6–8',why:'Con toda esa luz puedes cerrar y ganar nitidez'},{role:'p3',roleLabel:'③ terciario',name:'ISO',val:'100',why:'Al mínimo siempre. Hay luz de sobra.'}],af:'AF-S',punto:'Central',disparo:'S (single)',fixes:[{t:'Foto quemada',a:'↑ Velocidad primero. Si ya estás en 1/2000, cierra apertura.'},{t:'Foto oscura con sol',a:'¿ISO alto? Bájalo. Luego abre apertura.'},{t:'Sin bokeh',a:'Abre a f/1.8 y sube velocidad a 1/2000.'}]},
+  {id:'nublado',label:'Nublado / lluvia',sub:'Luz suave y difusa — la mejor para retratos',lente:'35mm',params:[{role:'p1',roleLabel:'① protagonista',name:'Apertura',val:'f/2–2.8',why:'La luz es suave, úsala para separar sujeto del fondo'},{role:'p2',roleLabel:'② secundario',name:'Velocidad',val:'1/250–400',why:'Suficiente para personas en movimiento lento'},{role:'p3',roleLabel:'③ terciario',name:'ISO',val:'400–800',why:'La nubosidad reduce la luz. Compensas aquí.'}],af:'AF-A',punto:'Central',disparo:'CL (ráfaga lenta)',fixes:[{t:'Foto oscura',a:'Abre a f/1.8 → ISO 800 → baja velocidad.'},{t:'Foto movida',a:'↑ Velocidad a 1/500. Compensa con ↑ ISO.'},{t:'Gotas nítidas',a:'Necesitas 1/800+. ↑ ISO para compensar.'}]},
+  {id:'poca-luz',label:'Poca luz / interior',sub:'Cafés, museos, restaurantes, hora dorada',lente:'35mm',params:[{role:'p1',roleLabel:'① protagonista',name:'Apertura',val:'f/1.8–2',why:'Primera palanca. Abre todo lo posible antes de tocar ISO.'},{role:'p2',roleLabel:'② secundario',name:'ISO',val:'800–1600',why:'Segunda palanca. La D3300 aguanta bien hasta 1600.'},{role:'p3',roleLabel:'③ terciario',name:'Velocidad',val:'1/125',why:'Mínimo para personas quietas.'}],af:'AF-S',punto:'Central, zona de contraste',disparo:'S (single)',fixes:[{t:'Foto oscura',a:'① f/1.8 ② ISO 1600 ③ velocidad a 1/60 apoyándote.'},{t:'18-55 en poca luz',a:'Malo. Cambia al 35mm — 3× más luz.'},{t:'Colores extraños',a:'Balance de blancos → Tungsteno o Auto.'}]},
+  {id:'noche',label:'Noche sin flash',sub:'La situación más difícil. Todo al límite.',lente:'35mm',params:[{role:'p1',roleLabel:'① protagonista',name:'Apertura',val:'f/1.8',why:'Siempre al máximo en noche. Sin discusión.'},{role:'p2',roleLabel:'② secundario',name:'ISO',val:'1600–3200',why:'En noche el ISO manda junto con la apertura.'},{role:'p3',roleLabel:'③ terciario',name:'Velocidad',val:'1/60–1/125',why:'El límite antes de que tus manos tiemblen.'}],af:'AF-S',punto:'Central, zona con contraste',disparo:'S (single)',fixes:[{t:'Foto oscura al max',a:'↓ Velocidad a 1/30 apoyándote.'},{t:'Cámara no enfoca',a:'Apunta a borde iluminado o usa linterna 1 segundo.'},{t:'Ruido fuerte',a:'Inevitable a ISO 3200. Puede ser estética.'}]},
+  {id:'calle',label:'Calle / candidata',sub:'Tu modo principal. Personas sin que lo sepan.',lente:'35mm',params:[{role:'p1',roleLabel:'① protagonista',name:'Velocidad',val:'1/400–640',why:'Congelar movimiento impredecible es la prioridad'},{role:'p2',roleLabel:'② secundario',name:'Apertura',val:'f/2.8–4',why:'f/1.8 es muy fino al vuelo. f/4 da margen.'},{role:'p3',roleLabel:'③ terciario',name:'ISO',val:'400–800',why:'Lo que pida la luz del lugar'}],af:'AF-A',punto:'Central',disparo:'CL (ráfaga lenta)',fixes:[{t:'Foto movida',a:'↑ Velocidad a 1/640. Compensa con ↑ ISO.'},{t:'Sujeto desenfocado',a:'Punto central al sujeto → mitad → recompones → disparas.'},{t:'Perdiste el momento',a:'Modo CL + mantén presionado. Dispara antes del momento.'}]},
+  {id:'retrato-quieto',label:'Retrato quieto',sub:'Persona estática, bokeh y nitidez en el ojo',lente:'35mm',params:[{role:'p1',roleLabel:'① protagonista',name:'Apertura',val:'f/1.8–2',why:'Máximo bokeh, separas sujeto del fondo'},{role:'p2',roleLabel:'② secundario',name:'Velocidad',val:'1/250',why:'Aunque estén quietos, siempre hay micro-movimiento'},{role:'p3',roleLabel:'③ terciario',name:'ISO',val:'Mínimo posible',why:'Con apertura abierta suele entrar luz suficiente'}],af:'AF-S',punto:'Manual en el ojo',disparo:'S (single)',fixes:[{t:'Ojo desenfocado',a:'Punto AF en el ojo. Enfoca → recompones. Nunca al revés.'},{t:'Sin bokeh',a:'f/1.8 + acércate más. Ambas juntas multiplican el bokeh.'},{t:'Cara a medias',a:'Cierra a f/2.8 para más margen de error.'}]},
+  {id:'retrato-mov',label:'Retrato en movimiento',sub:'Persona caminando, bailando, gesticulando',lente:'35mm',params:[{role:'p1',roleLabel:'① protagonista',name:'Velocidad',val:'1/500–800',why:'El movimiento manda. Sin esto, todo sale borroso.'},{role:'p2',roleLabel:'② secundario',name:'Apertura',val:'f/2–2.8',why:'Bokeh con margen para enfocar en movimiento'},{role:'p3',roleLabel:'③ terciario',name:'ISO',val:'800–1600',why:'Velocidad alta come luz, ISO compensa.'}],af:'AF-C',punto:'Central, sigue al sujeto',disparo:'CL (ráfaga lenta)',fixes:[{t:'Foto movida',a:'↑ Velocidad a 1/800. Acepta ↑ ISO 1600.'},{t:'Foto oscura',a:'↑ ISO 3200 o acepta ↓ 1/250.'},{t:'No sigue al sujeto',a:'AF-C + mantén botón a mitad MIENTRAS se mueve.'}]},
+  {id:'arq',label:'Arquitectura',sub:'Edificios, fachadas. Quieres todo nítido.',lente:'18-55mm',params:[{role:'p1',roleLabel:'① protagonista',name:'Apertura',val:'f/8–11',why:'Máxima nitidez de plano a plano.'},{role:'p2',roleLabel:'② secundario',name:'ISO',val:'100–200',why:'El edificio no se mueve. Sacrifica velocidad, no ISO.'},{role:'p3',roleLabel:'③ terciario',name:'Velocidad',val:'1/60–1/15',why:'Bájala lo que necesites. Apóyate.'}],af:'AF-S',punto:'Central o manual',disparo:'S + temporizador',fixes:[{t:'Líneas torcidas',a:'Nivela la cámara. Inclinar = efecto caída.'},{t:'Interior oscuro',a:'↓ Velocidad a 1/15 apoyándote. No abras apertura.'},{t:'Foto movida',a:'Temporizador 2s para no vibrar al presionar.'}]},
+];
+
+const refData={
+  apertura:{title:'Apertura (f/) — luz y bokeh',rows:[
+    {val:'f/1.8',m:'Máxima apertura. Más luz, bokeh máximo.',tag:'Retratos, poca luz',t:'g'},
+    {val:'f/2–2.8',m:'Gran apertura con margen de error al enfocar.',tag:'Retrato, calle',t:'g'},
+    {val:'f/4',m:'Media-alta. Algo de bokeh, más zona nítida.',tag:'Calle, grupos',t:'b'},
+    {val:'f/5.6',m:'Media. Todo bastante nítido. Menos luz.',tag:'Día soleado',t:'b'},
+    {val:'f/8',m:'Nitidez máxima. El punto dulce.',tag:'Arquitectura, paisaje',t:'a'},
+    {val:'f/11',m:'Todo enfocado. Necesita mucha luz.',tag:'Arquitectura con sol',t:'a'},
+    {val:'f/16–22',m:'Nitidez baja por difracción. Evitar.',tag:'Casi nunca',t:'r'},
+  ]},
+  velocidad:{title:'Velocidad — movimiento y luz',rows:[
+    {val:'1/2000+',m:'Congela cualquier cosa: pájaros, salpicaduras.',tag:'Acción extrema',t:'b'},
+    {val:'1/500–800',m:'Congela personas corriendo.',tag:'Retrato en movimiento',t:'g'},
+    {val:'1/250–400',m:'Congela personas caminando. Tu velocidad de calle.',tag:'Calle',t:'g'},
+    {val:'1/125',m:'Personas quietas. Mínimo cómodo sin trípode.',tag:'Retratos, interiores',t:'a'},
+    {val:'1/60',m:'Al límite. Manos firmes o apoyado.',tag:'Poca luz',t:'a'},
+    {val:'1/30 o menos',m:'Necesitas apoyo. Personas borrosas.',tag:'Arquitectura nocturna',t:'r'},
+    {val:'1" o más',m:'Larga exposición. Agua sedosa, luces de coches.',tag:'Trípode obligatorio',t:'r'},
+  ]},
+  iso:{title:'ISO — sensibilidad del sensor',rows:[
+    {val:'ISO 100',m:'Imagen limpia. Úsalo siempre que puedas.',tag:'Sol, mucha luz',t:'g'},
+    {val:'ISO 200–400',m:'Muy limpio. Apenas perceptible.',tag:'Nublado, exterior',t:'g'},
+    {val:'ISO 800',m:'Limpio. La D3300 lo maneja bien.',tag:'Interior iluminado',t:'b'},
+    {val:'ISO 1600',m:'Algo de ruido pero aceptable. Sin miedo.',tag:'Poca luz, noche con luz',t:'b'},
+    {val:'ISO 3200',m:'Ruido visible. Úsalo como estética de grano.',tag:'Noche urbana',t:'a'},
+    {val:'ISO 6400',m:'Ruido fuerte. Último recurso.',tag:'Emergencia nocturna',t:'r'},
+  ]},
+  af:{title:'Modos de autoenfoque (AF)',rows:[
+    {val:'AF-S',m:'Enfoca una vez y se bloquea. Sujetos quietos.',tag:'Retratos, arquitectura',t:'g'},
+    {val:'AF-C',m:'Sigue al sujeto en movimiento constantemente.',tag:'Personas en movimiento',t:'b'},
+    {val:'AF-A',m:'La cámara decide entre S y C automáticamente.',tag:'Calle, mixto',t:'a'},
+    {val:'MF',m:'Tú giras el anillo. Para oscuridad o control total.',tag:'Noche, creativo',t:'r'},
+  ]},
+  puntos:{title:'Puntos de enfoque',rows:[
+    {val:'Central',m:'El más preciso. Enfoca, luego recompones.',tag:'La mayoría de casos',t:'g'},
+    {val:'Manual',m:'Tú eliges el punto con el pad direccional.',tag:'Retratos (ojo)',t:'b'},
+    {val:'Zona dinámica',m:'Ajusta a puntos vecinos si el sujeto se mueve.',tag:'Movimiento leve',t:'a'},
+    {val:'Área automática',m:'La cámara elige. Impredecible en calle.',tag:'Evitar en street',t:'r'},
+  ]},
+  disparo:{title:'Modos de disparo',rows:[
+    {val:'S (Single)',m:'Un disparo por presión. Control total.',tag:'Retratos, arquitectura',t:'g'},
+    {val:'CL (Cont. Low)',m:'Ráfaga lenta 1–3 fps. Más chances del momento.',tag:'Calle, momentos',t:'b'},
+    {val:'CH (Cont. High)',m:'Ráfaga rápida. Llena la tarjeta rápido.',tag:'Deporte',t:'a'},
+    {val:'Timer 2s',m:'Elimina vibración al presionar. Para trípode.',tag:'Arquitectura, larga exp.',t:'g'},
+  ]},
+};
+
+const cheatData=[
+  {scene:'Calle / sol',ap:'f/4',vel:'1/500',iso:'200',prio:['vel','ap','iso'],af:'AF-A · CL'},
+  {scene:'Calle / nublado',ap:'f/2.8',vel:'1/320',iso:'640',prio:['vel','ap','iso'],af:'AF-A · CL'},
+  {scene:'Retrato / sol',ap:'f/1.8',vel:'1/1000',iso:'100',prio:['ap','vel','iso'],af:'AF-S · S'},
+  {scene:'Retrato / sombra',ap:'f/1.8',vel:'1/320',iso:'400',prio:['ap','vel','iso'],af:'AF-S · S'},
+  {scene:'Interior iluminado',ap:'f/1.8',vel:'1/125',iso:'800',prio:['ap','iso','vel'],af:'AF-S · S'},
+  {scene:'Cafetería',ap:'f/1.8',vel:'1/100',iso:'1200',prio:['ap','iso','vel'],af:'AF-S · S'},
+  {scene:'Noche urbana',ap:'f/1.8',vel:'1/80',iso:'2000',prio:['ap','iso','vel'],af:'AF-S · S'},
+  {scene:'Arquitectura',ap:'f/8',vel:'1/200',iso:'100',prio:['ap','iso','vel'],af:'AF-S · Timer'},
+  {scene:'Persona corriendo',ap:'f/2.8',vel:'1/800',iso:'800',prio:['vel','ap','iso'],af:'AF-C · CL'},
+  {scene:'5pm hora dorada',ap:'f/2.8',vel:'1/400',iso:'400',prio:['ap','vel','iso'],af:'AF-A · CL'},
+];
+
+const hacks=[
+  {num:'01',title:'Lee la luz antes de que pase algo',body:'Configura antes de que ocurra el momento. Cuando llegue, solo levantas y disparas.',ex:'Llegas a la fuente en Roma, ves sol lateral. f/2.8 · 1/400 · ISO 400. Esperas. Cuando alguien pase, disparas sin pensar.'},
+  {num:'02',title:'El orden de corrección siempre es el mismo',body:'Cuando algo sale mal: ① apertura → ② velocidad → ③ ISO. Nunca al revés.',ex:'Foto oscura: abres apertura. Si ya estás en f/1.8, bajas velocidad. Si ya estás en 1/60, subes ISO.'},
+  {num:'03',title:'f/2.8 es tu apertura de calle, no f/1.8',body:'A f/1.8 si alguien mueve la cabeza 5cm, el ojo sale desenfocado. f/2.8 da bokeh con margen real.',ex:'Reserva f/1.8 para retratos quietos. En movimiento, f/2.8 o f/4.'},
+  {num:'04',title:'CL es tu modo en calle',body:'CL dispara 1–3 fotos por segundo. En calle, los momentos duran fracciones de segundo.',ex:'Alguien camina hacia ti. Empiezas en CL a 5 metros. Tienes 6 fotos para elegir la expresión exacta.'},
+  {num:'05',title:'El medidor interno es tu árbitro',body:'En el visor hay una escala de -2 a +2. La barrita debe estar en 0. Izquierda = oscuro. Derecha = quemado.',ex:'Ves -1. Sabes que saldrá oscura. Abres apertura hasta que llegue a 0.'},
+  {num:'06',title:'Enfoca y recompone',body:'Punto central al sujeto → presiona a mitad → recompones el encuadre → presionas hasta el fondo.',ex:'Sujeto a la izquierda: apuntas al ojo, bloqueas, mueves la cámara a la izquierda, disparas.'},
+  {num:'07',title:'ISO 1600 no es el enemigo',body:'La D3300 a ISO 1600 es perfectamente usable. Una foto ruidosa bien expuesta vale más que una oscura limpia.',ex:'Cafetería: f/1.8 · 1/125 · ISO 1600. Tiene grano pero está expuesta y nítida.'},
+  {num:'08',title:'Velocidad mínima sin trípode',body:'Con el 35mm: mínimo 1/60. Con 18-55 a 55mm: mínimo 1/80. Más lento = foto trepidada.',ex:'Con VR del 18-55 activo puedes bajar 2–3 stops más.'},
+  {num:'09',title:'Configuración de arranque universal',body:'Cualquier exterior de día: f/4 · 1/400 · ISO 400. Funciona en el 80% de situaciones.',ex:'Llegas a cualquier lugar. Pones f/4·1/400·ISO 400. Medidor en -1 → abres a f/2.8. En +1 → 1/800.'},
+  {num:'10',title:'El medidor se confunde con fondos brillantes',body:'Fondo muy brillante → subexpone al sujeto. Apunta al sujeto, bloquea exposición, recompones y disparas.',ex:'Persona frente a ventana. Apuntas a la cara, bloqueas, recompones, disparas. La cara sale bien.'},
+];
+
+const faqs=[
+  {cat:'exposición',q:'Fotos siempre oscuras',steps:[{n:'1',t:'Abre la apertura.',d:'Baja el número f/. De f/5.6 → f/2.8 → f/1.8.'},{n:'2',t:'Baja la velocidad.',d:'Si ya estás en f/1.8, de 1/500 a 1/250 o 1/125.'},{n:'3',t:'Sube ISO.',d:'Último recurso. 400→800→1600.'}],note:'¿Fondos brillantes (cielo, ventanas)? El medidor se confundió. Apunta al sujeto, presiona a mitad para medir, recompone, dispara.'},
+  {cat:'exposición',q:'Fotos quemadas (muy blancas)',steps:[{n:'1',t:'Sube la velocidad.',d:'De 1/250 → 1/500 → 1/1000.'},{n:'2',t:'Cierra apertura si ya estás en 1/2000.',d:'De f/2.8 → f/5.6 → f/8.'},{n:'3',t:'Baja el ISO.',d:'ISO alto en pleno sol = problema. Bájalo a 100.'}],note:''},
+  {cat:'nitidez',q:'Fotos movidas',steps:[{n:'1',t:'¿Solo el sujeto borroso?',d:'Velocidad baja. El sujeto se movió.'},{n:'2',t:'¿Todo igual de borroso?',d:'Trepidación tuya. Apóyate.'},{n:'3',t:'Sube la velocidad.',d:'Dóblala. De 1/125 → 1/250 → 1/500.'},{n:'4',t:'Compensa.',d:'Abre apertura o sube ISO.'}],note:'Con el 35mm nunca bajes de 1/60 sin apoyo.'},
+  {cat:'nitidez',q:'Sujeto desenfocado, fondo nítido',steps:[{n:'1',t:'El foco cayó en el fondo.',d:'El punto de enfoque apuntó al fondo al disparar.'},{n:'2',t:'Enfoca y recompone.',d:'Central al sujeto → mitad → recompones → disparas.'},{n:'3',t:'Si usas f/1.8: cierra a f/2.8.',d:'La zona nítida a f/1.8 son milímetros.'}],note:''},
+  {cat:'nitidez',q:'La cámara no puede enfocar',steps:[{n:'1',t:'Apunta a un borde con contraste.',d:'El AF necesita bordes. Pared uniforme = no puede.'},{n:'2',t:'De noche: linterna del teléfono.',d:'Ilumina brevemente, enfoca, apaga, dispara.'},{n:'3',t:'Último recurso: MF.',d:'Gira el anillo del lente hasta ver nítido.'}],note:''},
+  {cat:'bokeh',q:'El fondo no se desenfoca',steps:[{n:'1',t:'Abre al máximo.',d:'f/1.8 con el 35mm.'},{n:'2',t:'Acércate al sujeto.',d:'Tan efectivo como abrir la apertura.'},{n:'3',t:'Aleja al sujeto del fondo.',d:'A 2–3 metros del fondo, no pegado a la pared.'}],note:'Las tres juntas: f/1.8 + tú cerca + fondo lejos = máximo bokeh.'},
+  {cat:'cámara',q:'La pantalla muestra todo negro',steps:[{n:'1',t:'Verifica ON.',d:'Switch arriba a la derecha.'},{n:'2',t:'Verifica la velocidad.',d:'1/4000 en oscuridad = sensor sin luz. Baja la velocidad.'},{n:'3',t:'Revisa la batería.',d:'Indicador en pantalla de información.'}],note:''},
+  {cat:'cámara',q:'La cámara no dispara',steps:[{n:'1',t:'El AF no ha enfocado.',d:'AF-S no dispara sin foco. Busca la luz verde en el visor.'},{n:'2',t:'Presiona a mitad primero.',d:'Mitad = enfocar y medir. Fondo = disparar.'},{n:'3',t:'¿Hay tarjeta SD?',d:'Sin tarjeta, la D3300 no dispara por defecto.'}],note:''},
+  {cat:'cámara',q:'Colores raros (amarillos o azules)',steps:[{n:'1',t:'Es el balance de blancos (WB).',d:'La cámara no lee bien la temperatura de color.'},{n:'2',t:'Cámbialo.',d:'Botón i → WB. Foco interior: Tungsteno. Nublado: Nublado. Sol: Luz del día.'},{n:'3',t:'O pon Auto WB.',d:'Funciona bien en la mayoría de situaciones.'}],note:''},
+  {cat:'cámara',q:'Mucho ruido / granulado',steps:[{n:'1',t:'Baja el ISO.',d:'El ruido viene de ISO alto. Intenta 800 o 400.'},{n:'2',t:'Compensa abriendo apertura.',d:'De f/4 → f/2.8 → f/1.8.'},{n:'3',t:'O baja la velocidad.',d:'Si el sujeto no se mueve, puedes ir a 1/60 apoyado.'}],note:'A ISO 3200 en D3300 es visible pero usable. En calle nocturna puede ser estética.'},
+  {cat:'campo',q:'Cambié de sombra a sol y todo se quemó',steps:[{n:'1',t:'Sube la velocidad primero.',d:'De 1/250 → 1/1000. Rueda trasera, un giro.'},{n:'2',t:'Cierra apertura si ya no puedes subir más.',d:'De f/2.8 → f/5.6 → f/8.'}],note:'Hábito: cada vez que cambias de zona de luz, revisa el medidor antes de disparar.'},
+  {cat:'campo',q:'No tengo tiempo de ajustar',steps:[{n:'1',t:'Usa una config fija.',d:'Día: f/4·1/500·ISO 400. Noche: f/1.8·1/125·ISO 1600.'},{n:'2',t:'Solo toca la velocidad.',d:'Rueda trasera sola. El ajuste más rápido.'},{n:'3',t:'Acepta imperfecciones.',d:'La captura del momento vale más que la exposición perfecta.'}],note:''},
+];
+
+const diagProblems=[
+  {id:'oscura',icon:'🌑',label:'Foto oscura'},
+  {id:'quemada',icon:'☀️',label:'Foto quemada'},
+  {id:'movida',icon:'💨',label:'Foto movida'},
+  {id:'desenfocada',icon:'🔮',label:'Desenfocada'},
+  {id:'sinbokeh',icon:'🏔️',label:'Sin bokeh'},
+  {id:'ruido',icon:'📺',label:'Mucho ruido'},
+];
+const diagSolutions={
+  oscura:{title:'Foto oscura — en este orden',fixes:[{n:'1',t:'Abre la apertura.',d:'Baja f/. De f/5.6→f/2.8→f/1.8.'},{n:'2',t:'Baja la velocidad.',d:'Si ya estás en f/1.8, de 1/500→1/250→1/125.'},{n:'3',t:'Sube ISO.',d:'Último recurso. 400→800→1600.'},{n:'⚡',t:'¿Sigue oscuro con medidor en 0?',d:'Fondo brillante confundió el medidor. Apunta al sujeto, mide, recompone, dispara.'}]},
+  quemada:{title:'Foto quemada — en este orden',fixes:[{n:'1',t:'Sube la velocidad.',d:'De 1/250→1/500→1/1000.'},{n:'2',t:'Cierra la apertura.',d:'Si ya estás en 1/2000, de f/2.8→f/5.6→f/8.'},{n:'3',t:'Baja el ISO.',d:'ISO alto en pleno sol = problema. Bájalo a 100.'}]},
+  movida:{title:'Foto movida — identifica cuál',fixes:[{n:'?',t:'¿Solo el sujeto borroso?',d:'Velocidad baja. El sujeto se movió.'},{n:'1',t:'Sube la velocidad.',d:'Dóblala. De 1/125→1/250→1/500.'},{n:'?',t:'¿Todo igual de borroso?',d:'Trepidación tuya. Tus manos vibraron.'},{n:'2',t:'Sube velocidad + apóyate.',d:'Con el 35mm, mínimo 1/60 sin apoyo.'},{n:'3',t:'Compensa.',d:'Abre apertura o sube ISO.'}]},
+  desenfocada:{title:'Desenfocada — foco en lugar equivocado',fixes:[{n:'1',t:'El punto apuntó al fondo.',d:'Enfoca-y-recompone: central al sujeto→mitad→recompones→disparas.'},{n:'2',t:'Si usas f/1.8: cierra a f/2.8.',d:'A f/1.8 la zona nítida son milímetros. Cualquier movimiento pierde el foco.'},{n:'3',t:'Si la cámara no puede enfocar.',d:'Apunta a un borde con contraste. En oscuridad: linterna 1 segundo→enfoca→apaga→dispara.'}]},
+  sinbokeh:{title:'Sin bokeh — tres palancas',fixes:[{n:'1',t:'Abre al máximo.',d:'f/1.8 con el 35mm.'},{n:'2',t:'Acércate al sujeto.',d:'Tan efectivo como abrir la apertura.'},{n:'3',t:'Aleja al sujeto del fondo.',d:'A 2–3 metros, no pegado a la pared.'},{n:'⚡',t:'Las tres juntas.',d:'f/1.8 + tú cerca + fondo lejos = máximo bokeh posible.'}]},
+  ruido:{title:'Mucho ruido — en este orden',fixes:[{n:'1',t:'Baja el ISO.',d:'El ruido viene de ISO alto. Intenta 800 o 400.'},{n:'2',t:'Compensa abriendo apertura.',d:'De f/4→f/2.8→f/1.8.'},{n:'3',t:'O baja la velocidad.',d:'Si el sujeto no se mueve, puedes ir a 1/60 apoyado.'},{n:'⚡',t:'¿Ya estás en f/1.8 y necesitas ISO 3200?',d:'Acepta el ruido. En calle nocturna puede ser estética.'}]},
+};
+
+const faqCats=[{key:'all',label:'Todos'},{key:'exposición',label:'Exposición'},{key:'nitidez',label:'Nitidez'},{key:'bokeh',label:'Bokeh'},{key:'cámara',label:'Cámara'},{key:'campo',label:'En campo'}];
+
+const tabs=[
+  {label:'Arranque',type:'quick'},
+  {label:'Luz',type:'scenes',ids:['sol','nublado','poca-luz','noche']},
+  {label:'Fotos',type:'scenes',ids:['calle','retrato-quieto','retrato-mov','arq']},
+  {label:'Parámetros',type:'ref'},
+  {label:'Cheat',type:'cheat'},
+  {label:'Hacks',type:'hacks'},
+  {label:'Diagnóstico',type:'diag'},
+  {label:'Soluciones',type:'faq'},
+];
+
+let activeTab=0, openRef=null, openFaq=null, activeFaqCat='all', diagSelected=null;
+
+function tagClass(t){return {g:'tag-g',a:'tag-a',r:'tag-r',b:'tag-b'}[t]||'tag-b';}
+
+function renderQuick(){
+  const cards=[
+    {icon:'☀️',label:'Día / sol',vals:[{p:'Apertura',v:'f/4'},{p:'Velocidad',v:'1/500'},{p:'ISO',v:'400'}],af:'AF-A · Central · CL'},
+    {icon:'⛅',label:'Tarde / nublado',vals:[{p:'Apertura',v:'f/2.8'},{p:'Velocidad',v:'1/320'},{p:'ISO',v:'640'}],af:'AF-A · Central · CL'},
+    {icon:'🌙',label:'Noche',vals:[{p:'Apertura',v:'f/1.8'},{p:'Velocidad',v:'1/80'},{p:'ISO',v:'2000'}],af:'AF-S · Contraste · S'},
+  ];
+  return `<div class="quick-grid">${cards.map(c=>`<div class="quick-card"><div class="quick-icon">${c.icon}</div><div class="quick-label">${c.label}</div>${c.vals.map(v=>`<div class="quick-val">${v.v}</div><div class="quick-param">${v.p}</div>`).join('')}<div class="quick-af">${c.af}</div></div>`).join('')}</div>
+  <div class="quick-note"><b>Regla de oro:</b> estos son tus puntos de partida. Mira el medidor en el visor — barrita en 0 = correcto. Izquierda = abre apertura. Derecha = sube velocidad.</div>
+  <div class="quick-note"><b>¿Cambió la luz?</b> Solo toca la velocidad. Rueda trasera, un giro.</div>
+  <div class="quick-note"><b>¿Algo salió mal?</b> Ve a la pestaña Diagnóstico.</div>`;
+}
+
+function renderScenes(ids){
+  return scenes.filter(s=>ids.includes(s.id)).map(s=>{
+    const lb=s.lente==='35mm'?`<span class="lente-badge lente-35">35mm f/1.8 — recomendado</span>`:`<span class="lente-badge lente-zoom">18-55mm — bueno para esto</span>`;
+    const ph=s.params.map(p=>`<div class="param"><div class="param-role ${p.role}">${p.roleLabel}</div><div class="param-name">${p.name}</div><div class="param-val">${p.val}</div><div class="param-why">${p.why}</div></div>`).join('');
+    const fh=s.fixes.map(f=>`<div class="fix"><span class="fix-trigger">⚡ ${f.t}</span><span class="fix-arr">→</span><span class="fix-action">${f.a}</span></div>`).join('');
+    return `<div class="scene-card"><div class="scene-title">${s.label}</div><div class="scene-sub">${s.sub}</div>${lb}<div class="params">${ph}</div><div class="af-row"><div class="af-chip"><div class="af-chip-label">Modo AF</div><div class="af-chip-val">${s.af}</div></div><div class="af-chip"><div class="af-chip-label">Punto</div><div class="af-chip-val">${s.punto}</div></div><div class="af-chip"><div class="af-chip-label">Disparo</div><div class="af-chip-val">${s.disparo}</div></div></div><div class="fixes"><div class="fix-title">Si algo sale mal</div>${fh}</div></div>`;
+  }).join('');
+}
+
+function renderRef(){
+  return Object.entries(refData).map(([key,sec])=>{
+    const id=`ref-${key}`;const isOpen=openRef===id;
+    const rows=sec.rows.map(r=>`<div class="ref-row"><div class="ref-val">${r.val}</div><div class="ref-meaning">${r.m} <span class="ref-tag ${tagClass(r.t)}">${r.tag}</span></div></div>`).join('');
+    return `<div class="acc-item"><button class="acc-q" onclick="toggleRef('${id}')"><span class="acc-q-text">${sec.title}</span><span class="acc-icon ${isOpen?'open':''}">+</span></button><div class="acc-body ${isOpen?'open':''}">${rows}</div></div>`;
+  }).join('');
+}
+
+function renderCheat(){
+  const pl={vel:'Velocidad',ap:'Apertura',iso:'ISO'};
+  const rows=cheatData.map(r=>`<tr><td>${r.scene}</td><td>${r.ap}</td><td>${r.vel}</td><td>${r.iso}</td><td>${r.prio.map((p,i)=>`<span class="prio prio-${i+1}">${pl[p]}</span>`).join('')}</td><td style="font-size:10px;color:var(--text3)">${r.af}</td></tr>`).join('');
+  return `<div class="table-wrap"><table><thead><tr><th>Situación</th><th>f/</th><th>Vel</th><th>ISO</th><th>Prio</th><th>AF</th></tr></thead><tbody>${rows}</tbody></table></div><p style="font-size:11px;color:var(--text3);margin-top:8px">Puntos de partida. Ajusta según el medidor.</p>`;
+}
+
+function renderHacks(){
+  return hacks.map(h=>`<div class="hack-card"><div class="hack-num">Hack ${h.num}</div><div class="hack-title">${h.title}</div><div class="hack-body">${h.body}</div><div class="hack-example">Ejemplo: ${h.ex}</div></div>`).join('');
+}
+
+function renderDiag(){
+  const btns=diagProblems.map(p=>`<button class="diag-btn ${diagSelected===p.id?'selected':''}" onclick="selectDiag('${p.id}')"><div class="diag-btn-icon">${p.icon}</div><div class="diag-btn-label">${p.label}</div></button>`).join('');
+  let result='';
+  if(diagSelected&&diagSolutions[diagSelected]){
+    const sol=diagSolutions[diagSelected];
+    const fixes=sol.fixes.map(f=>`<div class="diag-fix"><div class="diag-fix-num">${f.n}</div><div class="diag-fix-text"><b>${f.t}</b> ${f.d}</div></div>`).join('');
+    result=`<div class="diag-result"><div class="diag-result-title">${sol.title}</div>${fixes}<button class="diag-reset" onclick="selectDiag(null)">← Volver</button></div>`;
+  }
+  return `<div class="diag-q">¿Qué salió mal?</div><div class="diag-grid">${btns}</div>${result}`;
+}
+
+function renderFaq(){
+  const filtered=activeFaqCat==='all'?faqs:faqs.filter(f=>f.cat===activeFaqCat);
+  const cats=faqCats.map(c=>`<button class="faq-cat ${activeFaqCat===c.key?'active':''}" onclick="setFaqCat('${c.key}')">${c.label}</button>`).join('');
+  const items=filtered.map((f,i)=>{
+    const id=`faq-${i}`;const isOpen=openFaq===id;
+    const sh=f.steps.map(s=>`<div class="faq-step"><div class="faq-step-num">${s.n}</div><div class="faq-step-text"><b>${s.t}</b> ${s.d}</div></div>`).join('');
+    const nh=f.note?`<div class="faq-note">${f.note}</div>`:'';
+    return `<div class="acc-item"><button class="acc-q" onclick="toggleFaq('${id}')"><span class="acc-q-text">${f.q}</span><span class="acc-icon ${isOpen?'open':''}">+</span></button><div class="acc-body ${isOpen?'open':''}">${sh}${nh}</div></div>`;
+  }).join('');
+  return `<div class="faq-cats">${cats}</div>${items}`;
+}
+
+function toggleRef(id){openRef=openRef===id?null:id;render();}
+function toggleFaq(id){openFaq=openFaq===id?null:id;render();}
+function setFaqCat(cat){activeFaqCat=cat;openFaq=null;render();}
+function selectDiag(id){diagSelected=id;render();}
+
+function render(){
+  document.getElementById('tabbar').innerHTML=tabs.map((t,i)=>`<button class="tab ${i===activeTab?'active':''}" onclick="setTab(${i})">${t.label}</button>`).join('');
+  const t=tabs[activeTab];const el=document.getElementById('content');
+  if(t.type==='quick') el.innerHTML=renderQuick();
+  else if(t.type==='scenes') el.innerHTML=renderScenes(t.ids);
+  else if(t.type==='ref') el.innerHTML=renderRef();
+  else if(t.type==='cheat') el.innerHTML=renderCheat();
+  else if(t.type==='hacks') el.innerHTML=renderHacks();
+  else if(t.type==='diag') el.innerHTML=renderDiag();
+  else if(t.type==='faq') el.innerHTML=renderFaq();
+}
+
+function setTab(i){activeTab=i;if(i===7){activeFaqCat='all';openFaq=null;}if(i===6){diagSelected=null;}render();}
+render();
+</script>
+</body>
+</html>
