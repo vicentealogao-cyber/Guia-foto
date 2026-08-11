@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lightroom">
+<title>Guía Lightroom</title>
+<style>
+  :root{
+    --bg:#111113; --surface:#1b1b1e; --surface-2:#232327;
+    --border:#2e2e33; --text:#f2f0ea; --text-2:#a8a6a0; --text-3:#6f6d68;
+    --amber:#d98f3b; --amber-dim:#8a5e28; --teal:#3f8577; --teal-dim:#2a5850;
+    --red:#c1443c;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;
+    -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;}
+  body{padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);}
+
+  header{position:sticky; top:0; z-index:10; background:rgba(17,17,19,0.92);
+    backdrop-filter:blur(10px); padding:14px 18px 0 18px; border-bottom:1px solid var(--border);}
+  header h1{font-family:Georgia, "Times New Roman", serif; font-weight:600;
+    font-size:22px; margin:2px 0 12px 0; letter-spacing:0.2px;}
+  header h1 span{color:var(--amber);}
+
+  nav{display:flex; gap:8px; overflow-x:auto; padding-bottom:12px; scrollbar-width:none;}
+  nav::-webkit-scrollbar{display:none;}
+  nav button{flex:0 0 auto; background:var(--surface); color:var(--text-2);
+    border:1px solid var(--border); border-radius:20px; padding:7px 14px;
+    font-size:13px; font-weight:500; white-space:nowrap;}
+  nav button.active{background:var(--amber); color:#1a1207; border-color:var(--amber);}
+
+  main{padding:16px 16px 60px 16px; max-width:640px; margin:0 auto;}
+  section{display:none;}
+  section.active{display:block; animation:fade .18s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(3px);} to{opacity:1; transform:none;}}
+
+  .intro{font-size:13px; color:var(--text-2); line-height:1.5; margin:2px 0 16px 0;}
+
+  details{background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    margin-bottom:8px; overflow:hidden;}
+  summary{list-style:none; padding:13px 14px; font-size:15px; font-weight:500;
+    display:flex; justify-content:space-between; align-items:center; cursor:pointer;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+"; color:var(--amber); font-size:18px; font-weight:400;
+    transition:transform .15s ease; flex:0 0 auto; margin-left:10px;}
+  details[open] summary::after{transform:rotate(45deg);}
+  details[open] summary{border-bottom:1px solid var(--border);}
+  .body{padding:4px 14px 14px 14px; font-size:13.5px; line-height:1.55; color:var(--text-2);}
+  .body p{margin:8px 0;}
+  .body b{color:var(--text); font-weight:500;}
+  .tag{display:inline-block; background:var(--surface-2); color:var(--amber);
+    font-size:11px; font-weight:500; padding:2px 8px; border-radius:6px; margin-right:6px;}
+  .row{display:flex; gap:8px; margin-top:8px;}
+  .row .k{flex:0 0 78px; color:var(--text-3); font-size:12px; padding-top:1px;}
+  .row .v{flex:1; font-size:13px; color:var(--text-2);}
+
+  .fix{background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--teal);
+    border-radius:10px; padding:10px 13px; margin-bottom:8px;}
+  .fix .sym{font-size:14px; font-weight:500; color:var(--text); margin-bottom:3px;}
+  .fix .sol{font-size:13px; color:var(--text-2);}
+  .fix .sol b{color:var(--teal); font-weight:500;}
+
+  .tip{background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:11px 13px; margin-bottom:8px; font-size:13.5px; color:var(--text-2); line-height:1.5;}
+  .tip b{color:var(--amber); font-weight:500;}
+  .num{display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px;
+    border-radius:50%; background:var(--amber-dim); color:#fff; font-size:11px; font-weight:600;
+    margin-right:8px; flex:0 0 auto;}
+
+  .diag-q{background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:12px 13px; margin-bottom:8px;}
+  .diag-q .q{font-size:14px; font-weight:500; color:var(--text); margin-bottom:5px;}
+  .diag-q .a{font-size:13px; color:var(--text-2); line-height:1.5;}
+  .diag-q .a b{color:var(--teal); font-weight:500;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Guía <span>Lightroom</span></h1>
+  <nav id="tabs"></nav>
+</header>
+
+<main id="content"></main>
+
+<script>
+const DATA = {
+  luz: {
+    intro: "El brillo y el contraste general de la foto. Empieza siempre aquí.",
+    cards: [
+      {t:"Exposición", b:`<p><b>Qué es:</b> el brillo general parejo de toda la imagen.</p>
+        <div class="row"><div class="k">Cuándo</div><div class="v">Toda la foto está mal expuesta, no solo una zona.</div></div>
+        <div class="row"><div class="k">Rango</div><div class="v">±0.5 fino · ±1.0 notorio</div></div>`},
+      {t:"Contraste", b:`<p><b>Qué es:</b> la diferencia entre zonas claras y oscuras.</p>
+        <div class="row"><div class="k">Cuándo</div><div class="v">Fotos planas, nubladas o con niebla se benefician de subirlo.</div></div>
+        <div class="row"><div class="k">Rango</div><div class="v">+10 a +25</div></div>`},
+      {t:"Iluminaciones", b:`<p><b>Qué es:</b> controla solo las zonas más brillantes (cielo, reflejos) sin tocar sombras.</p>
+        <div class="row"><div class="k">Resuelve</div><div class="v">Cielos quemados, ventanas sobreexpuestas.</div></div>
+        <div class="row"><div class="k">Rango</div><div class="v">-20 a -50 para recuperar</div></div>`},
+      {t:"Sombras", b:`<p><b>Qué es:</b> controla solo las zonas más oscuras sin tocar luces.</p>
+        <div class="row"><div class="k">Resuelve</div><div class="v">Detalle escondido en sujeto a contraluz o en sombra.</div></div>
+        <div class="row"><div class="k">Rango</div><div class="v">+15 a +40 · +60 ya genera ruido</div></div>`},
+      {t:"Blancos", b:`<p><b>Qué es:</b> define el punto de blanco puro real (extremo derecho del histograma). Más quirúrgico que Iluminaciones.</p>
+        <div class="row"><div class="k">Rango</div><div class="v">0 a +20</div></div>`},
+      {t:"Negros", b:`<p><b>Qué es:</b> define el punto de negro puro. Le da profundidad y "cierra" la edición.</p>
+        <div class="row"><div class="k">Rango</div><div class="v">-10 a -30 · casi siempre se usa</div></div>`},
+    ]
+  },
+  color: {
+    intro: "Todo lo que cambia el color: tono general, canales, colores individuales y tintes creativos.",
+    cards: [
+      {t:"Equilibrio de blancos (Temperatura / Matiz)", b:`<p><b>Qué es:</b> corrige o estiliza el color general de la luz. Temperatura = azul↔amarillo. Matiz = verde↔magenta.</p>
+        <div class="row"><div class="k">Cuándo</div><div class="v">Foto con dominante de color no deseada, o para crear mood (cálido/frío).</div></div>`},
+      {t:"Curva de tono", b:`<p><b>Qué es:</b> versión precisa de Luz — mueves puntos específicos del tono, no solo "sombras" o "luces".</p>
+        <div class="row"><div class="k">Truco</div><div class="v">Forma de S = más contraste tipo película.</div></div>`},
+      {t:"Curva por canal (R/G/B)", b:`<p><b>Qué es:</b> mueves la curva de un solo color por separado.</p>
+        <div class="row"><div class="k">Resuelve</div><div class="v">Dominantes de color, o crear looks de película (sombras verdosas, luces cálidas).</div></div>`},
+      {t:"Mezclador de colores", b:`<p><b>Qué es:</b> edita cada uno de los 8 colores de la foto por separado (Tono / Saturación / Luminancia).</p>
+        <div class="row"><div class="k">Caso común</div><div class="v">Bajar saturación del naranja en piel · aclarar el azul del cielo.</div></div>`},
+      {t:"Color de punto", b:`<p><b>Qué es:</b> como el Mezclador, pero seleccionas con gotero un color exacto de la foto.</p>
+        <div class="row"><div class="k">Cuándo</div><div class="v">El tono no encaja limpio en una de las 8 categorías (ej. piel específica).</div></div>`},
+      {t:"Gradación de color", b:`<p><b>Qué es:</b> agrega un tinte nuevo a Sombras / Medios / Luces. No corrige, agrega estilo.</p>
+        <div class="row"><div class="k">Caso común</div><div class="v">Sombras azules + luces cálidas = look cinematográfico "teal & orange".</div></div>
+        <div class="row"><div class="k">Rango</div><div class="v">Intensidad 10-25 · +40 ya se ve "filtro"</div></div>`},
+    ]
+  },
+  efectos: {
+    intro: "Ajustes de estilo y textura sobre la foto ya expuesta y balanceada.",
+    cards: [
+      {t:"Textura", b:`<p><b>Qué es:</b> acentúa detalle mediano (piel, tela, madera) sin tocar bordes grandes.</p>
+        <div class="row"><div class="k">Cuidado</div><div class="v">En retratos, de más resalta poros y arrugas.</div></div>`},
+      {t:"Claridad", b:`<p><b>Qué es:</b> contraste local en zonas grandes (nubes, edificios, rocas). Da "punch".</p>
+        <div class="row"><div class="k">Evitar en</div><div class="v">Retratos — endurece la piel. Mejor -5 a -15.</div></div>
+        <div class="row"><div class="k">Rango</div><div class="v">+10 a +30 en paisaje/calle</div></div>`},
+      {t:"Borrar neblina", b:`<p><b>Qué es:</b> reduce (+) o agrega (-) bruma atmosférica.</p>
+        <div class="row"><div class="k">Cuándo</div><div class="v">Niebla real, contaminación, foto "lavada" a contraluz.</div></div>
+        <div class="row"><div class="k">Rango</div><div class="v">+5 a +20</div></div>`},
+      {t:"Viñeta", b:`<p><b>Qué es:</b> oscurece las esquinas para guiar la mirada al centro.</p>
+        <div class="row"><div class="k">Rango</div><div class="v">-10 a -20 sutil · -25+ ya se nota</div></div>`},
+      {t:"Granulado", b:`<p><b>Qué es:</b> agrega textura tipo película analógica. También disimula ruido digital.</p>
+        <div class="row"><div class="k">Rango</div><div class="v">10-25 sutil · 30+ look análogo evidente</div></div>`},
+    ]
+  },
+  detalle: {
+    intro: "Nitidez y limpieza de ruido. Se toca al final de la edición.",
+    cards: [
+      {t:"Enfoque", b:`<p><b>Qué es:</b> refuerza bordes/contornos. Toda foto digital lo necesita un poco.</p>
+        <div class="row"><div class="k">Radio</div><div class="v">1.0 estándar</div></div>
+        <div class="row"><div class="k">Detalle</div><div class="v">25 · más = más textura y ruido</div></div>
+        <div class="row"><div class="k">Máscara</div><div class="v">Sube 20-60 para proteger piel/cielo de textura no deseada</div></div>`},
+      {t:"Reducción de ruido", b:`<p><b>Qué es:</b> suaviza el ruido de ISO alto.</p>
+        <div class="row"><div class="k">Luminancia</div><div class="v">10-30 según ISO</div></div>
+        <div class="row"><div class="k">Color</div><div class="v">15-25, casi siempre seguro subirlo</div></div>
+        <div class="row"><div class="k">Trade-off</div><div class="v">Más reducción = menos detalle real</div></div>`},
+    ]
+  },
+  optica: {
+    intro: "Correcciones técnicas del lente. No cambian el look, corrigen defectos físicos.",
+    cards: [
+      {t:"Aberración cromática", b:`<p><b>Qué es:</b> franjas de color (morado/verde) en bordes de alto contraste.</p>
+        <div class="row"><div class="k">Cuándo</div><div class="v">Casi siempre conviene activarlo si hay ramas/bordes contra cielo brillante.</div></div>`},
+      {t:"Correcciones de lente", b:`<p><b>Qué es:</b> endereza distorsión geométrica usando el perfil del lente detectado.</p>
+        <div class="row"><div class="k">Cuándo</div><div class="v">Arquitectura/interiores con gran angular y líneas curvas no deseadas.</div></div>`},
+      {t:"Eliminar halos", b:`<p><b>Qué es:</b> corrige un halo residual tras correcciones agresivas.</p>
+        <div class="row"><div class="k">Cuándo</div><div class="v">Raro — solo si ya corregiste aberración y aún ves un halo de color.</div></div>`},
+      {t:"Desenfoque de lente", b:`<p><b>Qué es:</b> bokeh simulado en el fondo, vía máscara de Sujeto.</p>
+        <div class="row"><div class="k">Cuidado</div><div class="v">Mal aplicado en bordes del sujeto se nota artificial.</div></div>`},
+    ]
+  },
+  recorte: {
+    intro: "Composición final: encuadre, líneas rectas y proporción.",
+    cards: [
+      {t:"Aspecto", b:`<p><b>Qué es:</b> la proporción ancho×alto final del recorte (3x4, 1x1, 16x9...).</p>`},
+      {t:"Superposición de recorte (guías)", b:`<p><b>Tercios:</b> la más usada — sujeto sobre las intersecciones.</p>
+        <p><b>Diagonal / Triángulo:</b> cuando la foto tiene líneas de fuga.</p>
+        <p><b>Centrar:</b> composiciones simétricas.</p>
+        <p><b>Prop./Espiral dorada:</b> variante más precisa de Tercios.</p>`},
+      {t:"Geometría / Transformar", b:`<p><b>Qué es:</b> endereza verticales y horizontales torcidas (Upright automático o manual).</p>
+        <div class="row"><div class="k">Cuándo</div><div class="v">Arquitectura, edificios fotografiados desde abajo.</div></div>`},
+    ]
+  },
+  mascaras: {
+    intro: "Aplica cualquier ajuste anterior solo a una parte de la foto, no a toda.",
+    cards: [
+      {t:"Sujeto / Cielo / Fondo", b:`<p>IA detecta automáticamente esa zona. Útil para tratar sujeto y fondo por separado.</p>`},
+      {t:"Objetos", b:`<p>Tocas un objeto manualmente y la IA detecta sus bordes.</p>`},
+      {t:"Pincel", b:`<p>Pintas a mano libre. El control más flexible, el más manual.</p>`},
+      {t:"Degradado lineal / radial", b:`<p>Transición suave de un lado a otro, o circular. Ideal para cielos o luz dirigida al sujeto.</p>`},
+      {t:"Rango (color o luminancia)", b:`<p>Selecciona automáticamente todo lo que sea de cierto color o brillo, en toda la foto.</p>`},
+      {t:"Por qué importa", b:`<p>Es lo que separa una "corrección general" de una <b>edición dirigida</b> — combinar máscara + cualquier panel anterior es donde más sube el nivel.</p>`},
+    ]
+  },
+  consejos: {
+    intro: "",
+    tips: [
+      "El orden importa: <b>Luz → Color → Efectos → Detalle → Óptica → Recorte</b>. Editar fuera de orden hace que reajustes cosas dos veces.",
+      "La meta siempre es la <b>mejor versión real</b> de la foto, no la más dramática. Si dudas si ya es demasiado, probablemente ya es demasiado.",
+      "Antes de subir Contraste/Claridad a lo bruto, revisa si el problema en realidad es de Exposición — corrige la base primero.",
+      "En retratos, sé conservador con Textura y Claridad. En paisaje/calle puedes ser más generoso.",
+      "El histograma no miente aunque tu pantalla esté mal calibrada — revísalo si algo se ve raro.",
+      "Una máscara de Sujeto + un pequeño ajuste de luz suele hacer más que subir Exposición general a toda la foto.",
+      "Guarda tus ediciones favoritas como Preset cuando encuentres un look que se repite — te ahorra reconstruirlo cada vez."
+    ]
+  },
+  diagnostico: {
+    intro: "Antes de tocar un slider, mira la foto y pregúntate esto, en este orden.",
+    qs: [
+      {q:"¿La foto completa se ve muy oscura o muy clara?", a:"Es un problema de <b>Exposición</b>, no de Sombras/Luces por separado."},
+      {q:"¿Hay una zona quemada (blanco sin detalle) o bloqueada (negro sin detalle)?", a:"Revisa <b>Iluminaciones</b> o <b>Sombras</b> — o una <b>máscara</b> de esa zona específica."},
+      {q:"¿La foto se ve plana, sin vida, apagada?", a:"Sube <b>Contraste</b> o <b>Claridad</b>, y baja <b>Negros</b> para darle profundidad."},
+      {q:"¿Hay un tinte de color raro en toda la foto (verdoso, azulado)?", a:"Corrige <b>Temperatura/Matiz</b> en Equilibrio de blancos."},
+      {q:"¿Un color específico se ve mal (piel naranja, cielo artificial) pero el resto está bien?", a:"Usa el <b>Mezclador de colores</b> o <b>Color de punto</b>, no el balance general."},
+      {q:"¿La foto es técnicamente correcta pero le falta personalidad/mood?", a:"Aquí entra <b>Gradación de color</b> — es 100% creativo, no corrección."},
+      {q:"¿Se ve ruido o grano no deseado (ISO alto)?", a:"<b>Reducción de ruido</b> en Detalle, con cuidado de no perder nitidez real."},
+      {q:"¿Las líneas que deberían ser rectas se ven curvas o inclinadas?", a:"<b>Geometría/Transformar</b> u Upright, no Recorte."},
+      {q:"¿Color o blanco y negro?", a:"Si el color no aporta información ni emoción a la historia de la foto, o hay muchos colores compitiendo entre sí, considera <b>B&N</b>. Si el color es parte del punto de la foto (una prenda, una luz de neón), <b>a color</b>."},
+    ]
+  },
+  soluciones: {
+    intro: "Síntoma → qué tocar primero. Referencia rápida.",
+    fixes: [
+      {s:"Cielo quemado/blanco", f:"Baja <b>Iluminaciones</b> · si no alcanza, máscara de <b>Cielo</b> + Exposición local"},
+      {s:"Sujeto muy oscuro (contraluz)", f:"Sube <b>Sombras</b> · o máscara de <b>Sujeto</b> + Exposición"},
+      {s:"Foto se ve plana/lavada", f:"Sube <b>Contraste</b> y baja <b>Negros</b>"},
+      {s:"Tono de piel naranja/rojizo", f:"<b>Mezclador de colores</b> → Naranja, baja Saturación"},
+      {s:"Cielo azul artificial/neón", f:"<b>Mezclador de colores</b> → Azul, baja Saturación o Luminancia"},
+      {s:"Verde de plantas se ve artificial/neón", f:"<b>Mezclador de colores</b> → Verde, mueve Tono hacia amarillo"},
+      {s:"Ruido visible (grano feo)", f:"<b>Detalle</b> → Reducción de ruido Luminancia/Color"},
+      {s:"Foto se ve borrosa/suave", f:"<b>Detalle</b> → Enfoque, sube Cantidad con Máscara alta"},
+      {s:"Franjas de color en bordes", f:"<b>Óptica</b> → activa Quitar aberración cromática"},
+      {s:"Líneas de edificio curvas", f:"<b>Geometría</b> → Upright o Transformar Vertical/Horizontal"},
+      {s:"Foto sin identidad/mood", f:"<b>Gradación de color</b> en Sombras + Luces, sutil"},
+      {s:"Se ve sobreeditada/artificial", f:"Baja Claridad/Textura y Saturación 20-30%, revisa si el problema era de Exposición base"},
+    ]
+  }
+};
+
+const LABELS = {
+  luz:"Luz", color:"Color", efectos:"Efectos", detalle:"Detalle", optica:"Óptica",
+  recorte:"Recorte", mascaras:"Máscaras", consejos:"Consejos", diagnostico:"Diagnóstico", soluciones:"Soluciones"
+};
+
+const tabsEl = document.getElementById('tabs');
+const contentEl = document.getElementById('content');
+
+Object.keys(DATA).forEach((key, i) => {
+  const btn = document.createElement('button');
+  btn.textContent = LABELS[key];
+  btn.dataset.tab = key;
+  if (i === 0) btn.classList.add('active');
+  btn.onclick = () => selectTab(key);
+  tabsEl.appendChild(btn);
+
+  const sec = document.createElement('section');
+  sec.id = 'sec-' + key;
+  if (i === 0) sec.classList.add('active');
+
+  const d = DATA[key];
+  let html = d.intro ? `<p class="intro">${d.intro}</p>` : '';
+
+  if (d.cards) {
+    d.cards.forEach(c => {
+      html += `<details><summary>${c.t}</summary><div class="body">${c.b}</div></details>`;
+    });
+  }
+  if (d.tips) {
+    d.tips.forEach((t, idx) => {
+      html += `<div class="tip"><span class="num">${idx+1}</span>${t}</div>`;
+    });
+  }
+  if (d.qs) {
+    d.qs.forEach(item => {
+      html += `<div class="diag-q"><div class="q">${item.q}</div><div class="a">${item.a}</div></div>`;
+    });
+  }
+  if (d.fixes) {
+    d.fixes.forEach(item => {
+      html += `<div class="fix"><div class="sym">${item.s}</div><div class="sol">${item.f}</div></div>`;
+    });
+  }
+
+  sec.innerHTML = html;
+  contentEl.appendChild(sec);
+});
+
+function selectTab(key) {
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === key));
+  document.querySelectorAll('main section').forEach(s => s.classList.toggle('active', s.id === 'sec-' + key));
+  document.querySelector(`nav button[data-tab="${key}"]`).scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  window.scrollTo({top:0, behavior:'instant'});
+}
+</script>
+</body>
+</html>
