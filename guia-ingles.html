@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Guía Inglés">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon.png">
+<title>Guía de Inglés</title>
+<style>
+  :root{
+    --bg:#0d0f12; --card:#181b20; --card2:#1f2329; --border:#2a2f36;
+    --text:#e8e6e0; --text-dim:#9a9a92;
+    --teal:#1d9e75; --teal-text:#5dcaa5;
+    --amber:#fac775; --amber-text:#efb04a;
+    --coral:#d85a30; --coral-text:#f0997b;
+    --purple:#7f77dd;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;}
+  body{padding-bottom:40px;}
+  header{position:sticky; top:0; z-index:20; background:rgba(13,15,18,0.94);
+    backdrop-filter:blur(10px); padding:calc(env(safe-area-inset-top) + 14px) 16px 0 16px;
+    border-bottom:1px solid var(--border);}
+  h1{font-size:19px; font-weight:600; margin:0 0 12px 0; letter-spacing:-0.2px;}
+  .tabs{display:flex; gap:6px; overflow-x:auto; padding-bottom:12px; scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{flex:0 0 auto; padding:8px 14px; border-radius:20px; font-size:13px; font-weight:500;
+    background:var(--card2); color:var(--text-dim); white-space:nowrap; border:1px solid var(--border);}
+  .tab.active{background:var(--teal); color:#04342c; border-color:var(--teal);}
+  main{padding:16px;}
+  .section{display:none;}
+  .section.active{display:block; animation:fade .18s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+  .section-intro{font-size:13px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.5;}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:14px; margin-bottom:10px; overflow:hidden;}
+  .card-head{display:flex; justify-content:space-between; align-items:center; padding:14px 16px;}
+  .card-head .t{font-size:15px; font-weight:500; color:var(--text);}
+  .card-head .chev{color:var(--text-dim); font-size:14px; transition:transform .2s ease;}
+  .card.open .chev{transform:rotate(180deg);}
+  .card-body{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .card.open .card-body{max-height:4000px;}
+  .card-body-inner{padding:0 16px 16px 16px; font-size:14px; line-height:1.65; color:var(--text-dim);}
+  .card-body-inner b{color:var(--text); font-weight:500;}
+  .tag{display:inline-block; font-size:11px; font-weight:600; padding:3px 8px; border-radius:6px; margin-bottom:8px;}
+  .tag.teal{background:rgba(29,158,117,0.18); color:var(--teal-text);}
+  .tag.amber{background:rgba(250,199,117,0.15); color:var(--amber-text);}
+  .tag.coral{background:rgba(216,90,48,0.15); color:var(--coral-text);}
+  table{width:100%; border-collapse:collapse; margin-top:6px; font-size:13px;}
+  th{text-align:left; color:var(--text-dim); font-weight:500; font-size:11px; text-transform:uppercase; padding:6px 4px; border-bottom:1px solid var(--border);}
+  td{padding:8px 4px; border-bottom:1px solid var(--border); color:var(--text); vertical-align:top;}
+  .phrase-grid{display:flex; flex-direction:column; gap:6px; margin-top:6px;}
+  .phrase{background:var(--card2); border-radius:8px; padding:9px 12px; font-size:13.5px; font-family:ui-monospace,Menlo,monospace; color:var(--text);}
+  .dlg{background:var(--card2); border-radius:10px; padding:10px 12px; margin:8px 0; font-size:13.5px;}
+  .dlg .ln{margin:4px 0; font-family:ui-monospace,Menlo,monospace; color:var(--text);}
+  .dlg .who{color:var(--teal-text); font-weight:600; font-family:-apple-system,sans-serif; font-size:11px; text-transform:uppercase; margin-right:6px;}
+  .subh{color:var(--text); font-weight:500; font-size:13px; margin:12px 0 4px 0;}
+  .subh:first-child{margin-top:0;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Guía de Inglés</h1>
+  <div class="tabs" id="tabBar"></div>
+</header>
+
+<main id="main"></main>
+
+<script>
+const DATA = [
+{
+  id:"tiempos", label:"Tiempos verbales",
+  intro:"Lo que se entiende perfecto pero se construye mal cuando hablas rápido y bajo presión.",
+  cards:[
+    {t:"Present Perfect vs Past Simple", tag:["teal","La distinción #1 que delata a un no nativo"], body:`
+      <b>Regla de decisión inmediata:</b> ¿hay o puede haber una marca de tiempo cerrada? (yesterday, last week, in 2019, when I was a kid) → <b>Past Simple</b>, sin excepción.<br>
+      ¿El marco de tiempo sigue abierto? (today, this year, so far, ever, never, just, already, yet, recently) → <b>Present Perfect</b>.<br><br>
+      • I <b>went</b> to Chicago last year — cerrado, con fecha<br>
+      • I<b>'ve been</b> to Chicago — en algún momento de mi vida, no importa cuándo<br>
+      • I <b>saw</b> him yesterday — NUNCA "I have seen him yesterday"<br>
+      • I<b>'ve lived</b> here for five years (sigo viviendo aquí) vs I <b>lived</b> here for five years (ya no vivo aquí)<br><br>
+      <div class="subh">Casos donde se te va a escapar</div>
+      • Contando una anécdota completa → Past Simple todo el rato, aunque hayas abierto con Present Perfect: "I've traveled a lot. Last year I went to Japan, I stayed for a month, I met..."<br>
+      • Responder "¿alguna vez...?" → Present Perfect: Have you ever tried natto?<br>
+      • Dar una actualización sin fecha → Present Perfect: I've just eaten / I haven't decided yet
+    `},
+    {t:"Past Perfect", tag:["amber","El pasado del pasado"], body:`
+      Para el evento que ocurrió <b>antes</b> de otro evento que ya está en pasado.<br><br>
+      • When I arrived, the movie <b>had already started</b> (empezó antes de que llegaras)<br>
+      • By the time I got to the gate, they <b>had closed</b> the doors<br>
+      • I <b>hadn't eaten</b> anything before the flight, so I was starving<br><br>
+      Sin Past Perfect pierdes el orden: "When I arrived, the movie started" suena a que empezó justo cuando llegaste.<br><br>
+      <b>Prueba rápida:</b> si en español dirías "ya había..." o "antes de eso...", en inglés necesitas Past Perfect.
+    `},
+    {t:"Reported speech (backshift)", tag:["coral","Cómo retroceden los tiempos al repetir algo"], body:`
+      • Present → Past: "I'm tired" → He said he <b>was</b> tired<br>
+      • Past Simple → Past Perfect: "I saw her" → He said he <b>had seen</b> her<br>
+      • will → would · can → could · must → had to<br><br>
+      <b>Excepción que te va a servir para sonar más natural:</b> si lo dicho sigue siendo verdad ahora, en habla real muchos nativos NO retroceden: "She said she's coming" es natural si sigue viniendo. El backshift estricto es más de inglés formal/escrito — en conversación puedes relajarlo.
+    `},
+    {t:"Used to / would para hábitos pasados", body:`
+      <b>used to + verbo</b>: hábito o estado que ya no es cierto. "I used to smoke" (ya no fumo) — sirve tanto para acciones repetidas como estados.<br>
+      <b>would + verbo</b>: solo para acciones repetidas, NO para estados. "When I was a kid, I would visit my grandma every summer" — correcto. "I would live in Chicago" para decir que vivías ahí — incorrecto, ahí usas used to: "I used to live in Chicago."<br><br>
+      <b>Regla rápida:</b> si es un estado (vivir, tener, ser, gustar) → solo used to. Si es una acción repetida → cualquiera de los dos, would suena un poco más narrativo/literario.
+    `},
+    {t:"Present continuous, will y going to para el futuro", body:`
+      • <b>Present continuous</b>: plan ya organizado, con hora/lugar. "I'm meeting him tomorrow at 6" — ya está acordado.<br>
+      • <b>Going to</b>: intención decidida antes de hablar, sin necesariamente estar organizada. "I'm going to look for a new apartment" — ya lo decidiste, pero no tienes cita ni fecha exacta.<br>
+      • <b>Will</b>: decisión que tomas en el momento de hablar, predicción, o promesa. "I'll call you when I land" — decides ahí mismo.<br><br>
+      <b>Error típico:</b> usar "will" para todo por ser el "futuro por defecto" del español. Si ya está organizado, will suena raro — un nativo usaría present continuous o going to.
+    `}
+  ]
+},
+{
+  id:"condicionales", label:"Condicionales",
+  intro:"Las 4 estructuras condicionales más wish/if only, con ejemplo de uso real, no de libro de texto.",
+  cards:[
+    {t:"Zero conditional — verdades generales", body:`If + present, present. Para hechos siempre verdaderos, no hipótesis.<br><br>
+      <div class="dlg"><div class="ln"><span class="who">Uso</span>If you heat water to 100°C, it boils.</div><div class="ln"><span class="who">Uso</span>If I don't sleep enough, I get irritable.</div></div>`},
+    {t:"First conditional — futuro real/probable", body:`If + present, will. Algo que puede pasar de verdad, no es hipotético.<br><br>
+      <div class="dlg"><div class="ln"><span class="who">Uso</span>If it rains, I'll just take a cab.</div><div class="ln"><span class="who">Uso</span>If you don't book now, the flight will get more expensive.</div></div>`},
+    {t:"Second conditional — hipotético presente/futuro", body:`If + past, would. Situación irreal o poco probable ahora mismo.<br><br>
+      <div class="dlg"><div class="ln"><span class="who">Uso</span>If I had more time, I would travel more.</div><div class="ln"><span class="who">Uso</span>If I were you, I wouldn't say anything yet.</div></div>
+      <b>Nota:</b> con "I / he / she" se usa "were" en vez de "was" en este condicional — "If I were you" es la forma correcta y muy usada para dar consejos.`},
+    {t:"Third conditional — hipotético pasado", body:`If + past perfect, would have. Algo que ya no se puede cambiar.<br><br>
+      <div class="dlg"><div class="ln"><span class="who">Uso</span>If I had known, I would have called you.</div><div class="ln"><span class="who">Uso</span>If we had left earlier, we wouldn't have missed the train.</div></div>`},
+    {t:"Mixed conditionals", body:`Combina tiempos cuando la condición y el resultado están en momentos distintos.<br><br>
+      <div class="dlg"><div class="ln"><span class="who">Uso</span>If I had studied medicine, I would be a doctor now (condición pasada, resultado presente).</div><div class="ln"><span class="who">Uso</span>If she weren't so busy, she would have come to the party (condición presente, resultado pasado).</div></div>`},
+    {t:"Wish / if only — deseo sobre algo que no es así", body:`
+      • Sobre el presente: wish/if only + past. "I wish I spoke Korean" (no lo hablo).<br>
+      • Sobre el pasado: wish/if only + past perfect. "I wish I had studied more" (arrepentimiento).<br>
+      • Para pedir que algo cambie (queja): wish + would. "I wish it would stop raining."<br><br>
+      <b>if only</b> es más enfático/emocional que wish — úsalo cuando de verdad quieres remarcar el arrepentimiento: "If only I had brought a jacket."
+    `}
+  ]
+},
+{
+  id:"modales", label:"Modales",
+  intro:"Cómo cambia el significado y el nivel de cortesía según el modal que elijas.",
+  cards:[
+    {t:"must / have to / need to — obligación", body:`
+      • <b>must</b>: obligación que sientes tú, regla fuerte o conclusión lógica. "I must call her" / "You must be tired" (deducción).<br>
+      • <b>have to</b>: obligación externa, impuesta por otros. "I have to work on Saturdays."<br>
+      • <b>need to</b>: necesidad práctica, más neutral y el más usado en habla cotidiana. "I need to renew my visa."<br><br>
+      <b>Negativo — ojo aquí, es donde más se equivocan:</b> "don't have to" = no es necesario (opcional). "mustn't" = está prohibido. Son completamente distintos. "You don't have to come" (puedes venir o no) vs "You mustn't be late" (prohibido llegar tarde).
+    `},
+    {t:"should / ought to / had better — recomendación y advertencia", body:`
+      • <b>should</b>: recomendación normal, el más común. "You should try the street food."<br>
+      • <b>ought to</b>: casi igual, más formal/británico, poco usado en habla informal.<br>
+      • <b>had better</b>: advertencia con consecuencia si no se hace — más fuerte que should. "You'd better call them now" (o algo malo va a pasar).<br><br>
+      <b>Nivel de urgencia:</b> should (sugerencia) → had better (advertencia) → must/have to (obligación).
+    `},
+    {t:"might / could / may — grados de incertidumbre", body:`
+      • <b>might</b>: el más común en habla informal, posibilidad neutral. "It might rain later."<br>
+      • <b>could</b>: posibilidad, a veces con un matiz de "sería posible si...". También sirve para sugerir opciones: "We could try that new place."<br>
+      • <b>may</b>: más formal, común en contextos escritos o profesionales.<br>
+      • Negativos: <b>might not / may not</b> = tal vez no. <b>couldn't</b> = imposible, no puede ser (certeza negativa): "That couldn't be true" (estoy seguro que no).
+    `},
+    {t:"can / could / would you — para pedir cosas con distinto nivel de cortesía", body:`
+      Orden de menos a más formal/cortés:<br>
+      • <b>Can you...?</b> — directo, informal, entre amigos o confianza. "Can you pass me that?"<br>
+      • <b>Could you...?</b> — el nivel medio, funciona en casi cualquier situación cotidiana (tiendas, restaurantes, con desconocidos). "Could you help me with this?"<br>
+      • <b>Would you mind...? / Would it be possible to...?</b> — el más cortés, para pedir algo que implica más esfuerzo del otro o en contexto formal. "Would you mind if I opened the window?"<br><br>
+      <b>Para tu situación (extranjero pidiendo ayuda constantemente):</b> "Could you...?" es tu default seguro casi siempre. Sube a "would you mind" cuando sientas que estás pidiendo algo un poco más grande de lo normal.
+    `},
+    {t:"would — hipótesis, cortesía y hábito pasado", body:`
+      • Hipótesis: "I would go if I could."<br>
+      • Cortesía (más suave que will): "Would you like some coffee?"<br>
+      • Hábito pasado (ver tarjeta de tiempos verbales "used to/would"): "We would go there every summer."<br>
+      • Petición indirecta muy natural: "I would appreciate it if you could..."
+    `}
+  ]
+},
+{
+  id:"conectores", label:"Conectores",
+  intro:"Todos los que realmente se usan en conversación real, organizados por función, con ejemplo de uso cada uno.",
+  cards:[
+    {t:"Contraste", body:`
+      • <b>but</b> — contraste dentro de la misma oración. "I like it, but it's expensive."<br>
+      • <b>however</b> — entre oraciones, con coma después. "I like it. However, it's expensive."<br>
+      • <b>although / even though</b> + oración completa. "Although it was raining, we went out."<br>
+      • <b>though</b> — igual que although pero también se usa al final de la oración, muy coloquial. "It was expensive. I bought it, though."<br>
+      • <b>despite / in spite of</b> + sustantivo o -ing (NUNCA oración completa). "Despite the rain, we went out."<br>
+      • <b>while / whereas</b> — contraste comparativo entre dos cosas. "I prefer tea, whereas she prefers coffee."<br>
+      • <b>yet</b> — como but, más literario/enfático. "It's expensive, yet worth it."<br>
+      • <b>on the other hand</b> — perspectiva opuesta. "I want to save. On the other hand, I really want this trip."<br>
+      • <b>then again</b> — te reconsideras a medio pensamiento. "I should stay in. Then again, it's Friday."
+    `},
+    {t:"Adición", body:`
+      • <b>also</b> — va antes del verbo principal, o al inicio de la oración. "I also like it."<br>
+      • <b>too / as well</b> — al final de la oración. "I like it too."<br>
+      • <b>in addition (to)</b> — más formal. "In addition to English, I speak Spanish."<br>
+      • <b>moreover / furthermore</b> — formal, añade un punto más fuerte. "The food was great. Moreover, the service was excellent."<br>
+      • <b>not only... but also</b> — estructura enfática. "Not only is it cheap, but it's also delicious."<br>
+      • <b>plus</b> — informal, muy usado en conversación. "It's cheap, plus it's close to my place."
+    `},
+    {t:"Causa y efecto", body:`
+      • <b>because</b> + oración / <b>because of</b> + sustantivo. "I stayed because it was raining" / "because of the rain."<br>
+      • <b>since / as</b> — como because pero más suave, común al inicio. "Since it's late, let's finish tomorrow."<br>
+      • <b>so</b> — resultado, muy informal y común. "It was raining, so we stayed in."<br>
+      • <b>therefore / thus</b> — formal, resultado lógico. "The store was closed. Therefore, we went elsewhere."<br>
+      • <b>given that</b> — considerando que. "Given that it's late, let's finish tomorrow."<br>
+      • <b>due to</b> — formal, + sustantivo. "The flight was cancelled due to weather."<br>
+      • <b>as a result (of)</b> — consecuencia directa y clara.
+    `},
+    {t:"Condición", body:`
+      • <b>unless</b> = a menos que. "I won't go unless you come with me."<br>
+      • <b>as long as / provided that</b> — condición fuerte. "You can stay as long as you're quiet."<br>
+      • <b>in case</b> — por si acaso, se usa con presente aunque hable de futuro. "Take an umbrella in case it rains."
+    `},
+    {t:"Secuencia / tiempo", body:`
+      • <b>then / after that / next</b> — secuencia simple en una narración.<br>
+      • <b>as soon as</b> — en cuanto. "Call me as soon as you land."<br>
+      • <b>once</b> — una vez que. "Once you're done, let me know."<br>
+      • <b>meanwhile</b> — mientras tanto, dos acciones simultáneas.<br>
+      • <b>by the time</b> — para cuando (casi siempre con Past Perfect). "By the time I got there, they had left."
+    `},
+    {t:"Clarificación, énfasis y conclusión", body:`
+      • <b>in fact / actually</b> — corrige o enfatiza. "I thought it'd be hard. Actually, it was easy."<br>
+      • <b>that being said / that said</b> — matiza sin contradecir del todo. "It was expensive. That said, it was worth it."<br>
+      • <b>the thing is</b> — introduce el punto real. "The thing is, I don't think it'll work."<br>
+      • <b>basically</b> — resume/simplifica. "Basically, we're just waiting."<br>
+      • <b>in short / overall</b> — para cerrar una idea larga.
+    `},
+    {t:"Muletillas para ganar tiempo mientras piensas", tag:["teal","Esto es lo que más seguridad te va a dar hablando"], body:`
+      Los nativos NO hablan con oraciones perfectas seguidas — usan estas para pensar sin quedarse en silencio:<br>
+      • <b>I mean</b> — clarificas o corriges lo que dijiste. "I mean, it's not that bad."<br>
+      • <b>well</b> — para empezar a responder algo, ganar un segundo. "Well, I guess it depends."<br>
+      • <b>you know</b> — muletilla de conexión, muy natural. "It's, you know, complicated."<br>
+      • <b>like</b> — relleno coloquial (úsalo con moderación, es muy informal). "It was, like, really good."<br>
+      • <b>so anyway</b> — para retomar el hilo después de desviarte.<br>
+      • <b>let me think</b> / <b>how do I put this</b> — pausa explícita, suena mucho mejor que quedarte callado.
+    `},
+    {t:"Los que faltaban — lista completa", tag:["amber","Para que el mapa quede realmente completo"], body:`
+      • <b>besides</b> — además, aparte de eso. "I don't want to go. Besides, I'm tired."<br>
+      • <b>nevertheless / nonetheless</b> — sin embargo, más formal que however. "It was expensive. Nevertheless, I bought it."<br>
+      • <b>in contrast (to)</b> — en contraste con. "In contrast to last year, sales are up."<br>
+      • <b>either... or / neither... nor</b> — o esto o aquello / ni esto ni aquello. "You can either call or email." / "I like neither option."<br>
+      • <b>for instance / for example</b> — para dar un ejemplo concreto.<br>
+      • <b>in other words</b> — para reformular algo dicho de otra manera. "I'm busy — in other words, I can't make it."<br>
+      • <b>instead (of)</b> — en lugar de. "Let's go there instead." / "Instead of calling, just text me."<br>
+      • <b>rather than</b> — más formal que instead of, para comparar preferencias. "I'd walk rather than take a cab."<br>
+      • <b>otherwise</b> — de lo contrario. "Hurry up, otherwise we'll miss it."<br>
+      • <b>provided (that)</b> — siempre y cuando, como as long as pero más formal. "You can stay, provided you're quiet."<br>
+      • <b>no matter what/how</b> — sin importar qué/cómo. "No matter what happens, I'll be there."<br>
+      • <b>subsequently</b> — posteriormente, formal, para narrar secuencia. "He apologized. Subsequently, they made up."<br>
+      • <b>in conclusion / to sum up</b> — para cerrar una idea larga o una explicación.
+    `}
+  ]
+},
+{
+  id:"errores", label:"Errores típicos",
+  intro:"Todos los calcos del español que se cuelan aunque entiendas y hables bien — lo que realmente delata a un hispanohablante avanzado.",
+  cards:[
+    {t:"False friends más comunes", body:`
+      • <b>actually</b> = de hecho (NO "actualmente" → eso es <b>currently</b>)<br>
+      • <b>embarrassed</b> = apenado (NO "embarazada" → eso es <b>pregnant</b>)<br>
+      • <b>realize</b> = darse cuenta (NO "realizar/llevar a cabo" → eso es <b>carry out</b>)<br>
+      • <b>sensible</b> = sensato (NO "sensible" emocional → eso es <b>sensitive</b>)<br>
+      • <b>assist</b> = ayudar formalmente (NO "asistir a un evento" → eso es <b>attend</b>)<br>
+      • <b>library</b> = biblioteca (NO "librería" → eso es <b>bookstore</b>)<br>
+      • <b>fabric</b> = tela (NO "fábrica" → eso es <b>factory</b>)<br>
+      • <b>exit</b> = salida (NO "éxito" → eso es <b>success</b>)<br>
+      • <b>lecture</b> = charla/conferencia (NO "lectura" → eso es <b>reading</b>)<br>
+      • <b>argument</b> = discusión/pelea (NO "argumento de una historia" → eso es <b>plot</b>)<br>
+      • <b>carpet</b> = alfombra (NO "carpeta" → eso es <b>folder</b>)<br>
+      • <b>pretend</b> = fingir (NO "pretender/tener intención" → eso es <b>intend</b>)<br>
+      • <b>disgrace</b> = deshonra (NO "desgracia/mala suerte" → eso es <b>misfortune</b>)<br>
+      • <b>success</b> = éxito (NO "suceso/evento" → eso es <b>event</b>)<br>
+      • <b>constipated</b> = estreñido (NO "resfriado" → eso es <b>congested / have a cold</b>) — importante para no confundirte en la farmacia<br>
+      • <b>relatives</b> = parientes (NO uses "parents" a menos que hables específicamente de tus papás)<br>
+      • <b>attend</b> = asistir a algo (NO "atender a alguien" en el sentido de servicio → eso es <b>serve / help</b>)
+    `},
+    {t:"Preposiciones fijas que no calcan del español", body:`
+      • depend <b>on</b> (no "of")<br>
+      • married <b>to</b> (no "with")<br>
+      • interested <b>in</b> (no "for")<br>
+      • good <b>at</b> (no "in")<br>
+      • different <b>from/than</b> (no "of")<br>
+      • afraid <b>of</b> · proud <b>of</b> · capable <b>of</b> · responsible <b>for</b> · famous <b>for</b> · based <b>on</b><br>
+      • listen <b>to</b> · look <b>for</b> · wait <b>for</b> · think <b>about/of</b> · worry <b>about</b> · complain <b>about</b><br>
+      • agree <b>with</b> (una persona) / agree <b>on</b> (un tema)<br>
+      • apologize <b>for</b> algo · congratulate <b>on</b> algo · blame someone <b>for</b> algo<br>
+      • arrive <b>at</b> (un lugar puntual: the airport) / arrive <b>in</b> (una ciudad o país)
+    `},
+    {t:"Preguntas indirectas — no invierten sujeto y verbo", tag:["coral","Uno de los errores más comunes en hablantes con tu nivel"], body:`
+      En una pregunta directa el verbo va antes del sujeto: "Where is the station?"<br>
+      Pero dentro de una pregunta indirecta (cuando la metes dentro de otra oración), el orden vuelve a ser normal — sujeto antes que verbo:<br><br>
+      • "Do you know <b>where the station is</b>?" — NO "where is the station"<br>
+      • "Can you tell me <b>what time it is</b>?" — NO "what time is it"<br>
+      • "I wonder <b>if he's coming</b>." — NO "is he coming"<br><br>
+      Esto suena mucho más educado y natural, especialmente para pedir información a desconocidos — úsalo constantemente de viaje.
+    `},
+    {t:"Adverbios de frecuencia — posición en la oración", body:`
+      Van <b>antes</b> del verbo principal, pero <b>después</b> de "to be":<br>
+      • "I <b>always</b> drink coffee" (antes del verbo principal)<br>
+      • "I am <b>always</b> tired" (después de "to be")<br>
+      • "She <b>doesn't usually</b> answer right away" (entre el auxiliar y el verbo)<br><br>
+      Ponerlo al inicio o al final como en español ("Yo siempre tomo café" → "I always drink coffee" está bien, pero "Drink coffee always I" está mal) suena raro casi siempre.
+    `},
+    {t:"Doble negación", body:`El inglés estándar NO acepta doble negación (aunque la escuches en canciones/slang).<br><br>
+      • Incorrecto: "I don't have nothing"<br>
+      • Correcto: "I don't have anything" o "I have nothing"
+    `},
+    {t:"Gerundio vs infinitivo después del verbo", body:`
+      • enjoy / avoid / consider / finish / keep + <b>-ing</b>: "I enjoy traveling."<br>
+      • want / need / decide / plan / hope + <b>to</b>: "I decided to leave."<br><br>
+      <b>Los que cambian de significado según cuál uses (los más traicioneros):</b><br>
+      • <b>stop to do</b> (paras para hacer algo) vs <b>stop doing</b> (dejas de hacer algo): "I stopped to eat" vs "I stopped eating."<br>
+      • <b>remember to do</b> (te acuerdas de hacerlo, hacia adelante) vs <b>remember doing</b> (recuerdas haberlo hecho, hacia atrás): "Remember to call her" vs "I remember calling her."<br>
+      • <b>try to do</b> (te esfuerzas) vs <b>try doing</b> (lo pruebas/experimentas): "Try to relax" vs "Try eating something."
+    `},
+    {t:"Make vs do", tag:["amber","Muy calcado porque 'hacer' en español cubre ambos"], body:`
+      • <b>make</b>: crear algo, decisiones, esfuerzos → make a mistake / make a decision / make an effort / make plans / make money<br>
+      • <b>do</b>: actividades generales, tareas, trabajo → do homework / do business / do a favor / do exercise / do the dishes<br><br>
+      No hay regla 100% lógica — es memorización por combinación fija (collocation), pero estas son las más usadas en la vida diaria.
+    `},
+    {t:"Verbo 'to be' donde el español usa 'tener'", body:`
+      Calco directo de "tener" que suena raro o incluso confuso en inglés:<br>
+      • "Tengo 25 años" → <b>I'm 25</b> (NO "I have 25 years")<br>
+      • "Tengo calor / frío" → <b>I'm hot / I'm cold</b> (NO "I have hot/cold" — "I'm hot" en tono coqueto también puede significar "estoy atractivo", el contexto lo aclara)<br>
+      • "Tengo hambre / sed" → <b>I'm hungry / I'm thirsty</b> (NO "I have hunger")<br>
+      • "Tengo miedo" → <b>I'm scared / afraid</b> (NO "I have fear")<br>
+      • "Tengo razón" → <b>I'm right</b> (NO "I have reason")
+    `},
+    {t:"Artículos con generalizaciones", body:`
+      Cuando hablas en general (no de algo específico), el inglés NO usa "the":<br>
+      • "I like music" (en general) — NO "I like the music"<br>
+      • "Dogs are loyal" (en general) — NO "The dogs are loyal"<br><br>
+      Sí usas "the" cuando ya es específico y ambos saben de cuál hablan: "I like the music they're playing right now."
+    `},
+    {t:"'People' es siempre plural", body:`
+      • "People is nice" — incorrecto<br>
+      • "People <b>are</b> nice" — correcto, siempre en plural, aunque en español "la gente es" suene singular.
+    `}
+  ]
+},
+{
+  id:"viajar", label:"Para viajar",
+  intro:"Estructuras completas, no solo frases sueltas — cómo se arma la pregunta, cómo se responde, cómo se sostiene la conversación.",
+  cards:[
+    {t:"El molde base para preguntar cualquier cosa", tag:["teal","Memoriza esto, te sirve para el 80% de las situaciones"], body:`
+      Niveles de formalidad para pedir información a un desconocido, de más casual a más formal:<br>
+      • "Do you know if...?" — Do you know if this bus goes downtown?<br>
+      • "Is there any chance...?" — Is there any chance you know where the nearest ATM is?<br>
+      • "Excuse me, could you tell me...?" — el más seguro y versátil, úsalo por default.<br>
+      • "Would you happen to know...?" — muy cortés, ideal cuando ya le estás pidiendo bastante a alguien.<br><br>
+      Recuerda: dentro de todas estas, la pregunta interna NO se invierte (ver pestaña de Errores típicos) — "Excuse me, could you tell me where the bathroom is?" no "where is the bathroom."
+    `},
+    {t:"Aeropuerto y vuelos", body:`
+      <div class="dlg">
+      <div class="ln"><span class="who">Tú</span>Hi, I have a reservation under Vicente Alogao.</div>
+      <div class="ln"><span class="who">Staff</span>Great, can I see your passport?</div>
+      <div class="ln"><span class="who">Tú</span>Here you go. Also, is there any chance I could get a window seat?</div>
+      <div class="ln"><span class="who">Staff</span>Let me check... yes, I can do that for you.</div>
+      </div>
+      <div class="subh">Para retrasos y conexiones</div>
+      • My flight got delayed — is there an estimated new time?<br>
+      • I'm going to miss my connection — can you rebook me on the next available flight?<br>
+      • Is there any compensation for the delay?<br>
+      <div class="subh">Equipaje perdido</div>
+      • My bag didn't come out on the belt.<br>
+      • I'd like to file a lost luggage report.<br>
+      • How long does it usually take to locate it?
+    `},
+    {t:"Hospedaje", body:`
+      <div class="dlg">
+      <div class="ln"><span class="who">Tú</span>Hi, I have a reservation under Vicente for two nights.</div>
+      <div class="ln"><span class="who">Staff</span>Perfect, here's your key. Check-out is at 11.</div>
+      <div class="ln"><span class="who">Tú</span>Got it. By any chance, is a late check-out possible?</div>
+      <div class="ln"><span class="who">Staff</span>I can give you until 1pm, no problem.</div>
+      </div>
+      <div class="subh">Escalando una queja sin sonar agresivo — 3 pasos</div>
+      1. Describes el problema, neutral: "The AC in my room isn't working."<br>
+      2. Pides una solución concreta: "Could someone come take a look, or could I switch rooms?"<br>
+      3. Si no resuelven, subes el tono con firmeza pero sin gritar: "I understand, but this is the second time I'm asking — I'd really appreciate it if this could get fixed today."
+    `},
+    {t:"Comida y restaurantes", body:`
+      <div class="dlg">
+      <div class="ln"><span class="who">Tú</span>Hi, table for one, please.</div>
+      <div class="ln"><span class="who">Staff</span>Sure, right this way. Here's the menu.</div>
+      <div class="ln"><span class="who">Tú</span>Thanks. What do you recommend?</div>
+      <div class="ln"><span class="who">Staff</span>The grilled fish is really popular here.</div>
+      <div class="ln"><span class="who">Tú</span>Perfect, I'll have that. Also, I'm allergic to peanuts — does it have any?</div>
+      <div class="ln"><span class="who">Staff</span>No, you're fine with that one.</div>
+      </div>
+      <div class="subh">Corregir un pedido sin sonar grosero</div>
+      • Sorry, I think there's been a mix-up — I actually ordered the [X], not this.<br>
+      • This isn't quite what I asked for, could you fix that for me?<br>
+      <div class="subh">Cerrar la cuenta</div>
+      • Could I get the check, please? / Could we split the bill? / Is tip included?
+    `},
+    {t:"Transporte local", body:`
+      <div class="subh">Taxi / rideshare</div>
+      • I need to go to [place], how much would that be?<br>
+      • Could you use the meter, please?<br>
+      • Could you drop me off right here?<br>
+      <div class="subh">Metro / bus</div>
+      • Does this train go to [station]?<br>
+      • Which stop is closest to [place]?<br>
+      • Do I need to transfer anywhere?<br>
+      <div class="subh">Confirmando que vas bien (muy útil para no perderte)</div>
+      • Am I going the right way for [place]?<br>
+      • Sorry, I think I'm lost — can you point me in the right direction?
+    `},
+    {t:"Compras y mercados", body:`
+      <div class="subh">Tallas y probarse ropa</div>
+      • Do you have this in a size [M]? / Could I try this on?<br>
+      • Do you have this in another color?<br>
+      <div class="subh">Precio y regateo (donde aplique)</div>
+      • Is this price negotiable? / Could you do a little better on the price?<br>
+      • That's a bit more than I wanted to spend — what's your best price?<br>
+      <div class="subh">Devoluciones</div>
+      • I'd like to return this — do you accept returns? / Do I need the receipt for this?
+    `},
+    {t:"Conversación social y conocer gente", body:`
+      <div class="subh">Abrir conversación</div>
+      • So, how do you know [person]? / What brought you here? / How long have you been living here?<br>
+      <div class="subh">Mantener la conversación con preguntas de seguimiento (esto es lo que más falta en hablantes con tu nivel)</div>
+      • That's interesting, what got you into that?<br>
+      • Oh really? How was that? / What was that like?<br>
+      • I've never done that — is it hard to get into?<br>
+      <div class="subh">Despedirte sin que se sienta abrupto</div>
+      • It was really nice talking to you, I should get going though.<br>
+      • Let's keep in touch — do you have Instagram / WhatsApp?
+    `},
+    {t:"Cuando no entiendes algo", tag:["coral","Vas a usar esto todos los días los primeros meses"], body:`
+      No te quedes callado fingiendo que entendiste — es peor a largo plazo.<br><br>
+      • Sorry, could you say that one more time?<br>
+      • I'm sorry, I didn't quite catch that — could you repeat it a bit slower?<br>
+      • Sorry, my English isn't perfect — could you say that in a simpler way?<br>
+      • Just to make sure I understood — you mean [repites lo que entendiste], right?<br>
+      • Could you spell that for me? (para nombres, direcciones)
+    `},
+    {t:"Salud y emergencias", body:`
+      <div class="dlg">
+      <div class="ln"><span class="who">Tú</span>Hi, I haven't been feeling well — I think I need to see a doctor.</div>
+      <div class="ln"><span class="who">Staff</span>What are your symptoms?</div>
+      <div class="ln"><span class="who">Tú</span>I've had a fever since yesterday and my throat hurts a lot.</div>
+      </div>
+      • Is there a pharmacy nearby? / Do I need a prescription for this?<br>
+      • I'm allergic to [medicine/food].<br>
+      • I lost my [item] / My [item] was stolen — where's the nearest police station?
+    `},
+    {t:"Vida diaria durante los 6 meses", tag:["amber","Lo que necesitas para de verdad vivir ahí, no solo visitar"], body:`
+      <div class="subh">Banco / SIM / servicios</div>
+      • I'd like to open an account / get a SIM card — what documents do I need?<br>
+      • Is there a monthly fee for this plan?<br>
+      <div class="subh">Departamento / casero</div>
+      • There's an issue with [the water heater / the wifi] — could someone take a look?<br>
+      • Is the deposit refundable when I move out?<br>
+      <div class="subh">Quejas de apps/delivery</div>
+      • My order never arrived — can I get a refund?<br>
+      • This isn't what I ordered — can this be corrected?<br>
+      <div class="subh">Coworkers / networking</div>
+      • What do you usually do around here on weekends?<br>
+      • Any recommendations for someone new in town?
+    `}
+  ]
+},
+{
+  id:"pensar", label:"Pensar en inglés",
+  intro:"El método real para dejar de traducir y empezar a construir directo en inglés.",
+  cards:[
+    {t:"Qué te está fallando en realidad", tag:["teal","Diagnóstico del problema real"], body:`
+      Con tu nivel de comprensión y vocabulario, el cuello de botella no es "no sabes inglés" — es que tu cerebro sigue armando la oración en español primero y luego la traduce. Eso te cuesta velocidad y seguridad, aunque el resultado final sea correcto.<br><br>
+      El objetivo de esta pestaña no es aprender más palabras — es cambiar el proceso de construcción.
+    `},
+    {t:"Deja de traducir palabra por palabra — piensa por función", body:`
+      Cuando traduces literal, produces calcos raros (ver pestaña de Errores típicos: "tener hambre" → "have hunger" en vez de "be hungry").<br><br>
+      El cambio real: en vez de pensar "¿cómo se dice esta palabra?", pregúntate "¿qué estoy tratando de <b>lograr</b> con esta frase?" — ¿estás pidiendo algo? ¿quejándote? ¿preguntando ubicación? Ese objetivo tiene un molde fijo en inglés (ver siguiente tarjeta), y ese molde no siempre corresponde palabra por palabra con el español.
+    `},
+    {t:"Piensa en bloques (chunks), no en palabras sueltas", tag:["amber","Así piensan los nativos, literalmente"], body:`
+      Un nativo no arma "I" + "would" + "like" + "to" por separado — tiene el bloque completo <b>"I'd like to..."</b> guardado como una sola unidad, lista para usar.<br><br>
+      <div class="subh">Bloques que deberías tener automáticos, no armados letra por letra</div>
+      • I'd like to... · I'm trying to... · I was wondering if... · It depends on... · As far as I know...<br>
+      • The thing is... · What I mean is... · I'm not sure, but... · Correct me if I'm wrong, but...<br><br>
+      <b>Cómo se practica:</b> no memorices la gramática interna del bloque — memoriza el bloque completo como si fuera una sola palabra larga, y practica solo cambiando lo que va después.
+    `},
+    {t:"Construye desde la intención, elige el molde antes que el contenido", body:`
+      Antes de abrir la boca, en una fracción de segundo decide QUÉ tipo de frase necesitas — no el contenido todavía:<br><br>
+      • ¿Vas a pedir algo? → molde: "Could I get...?" / "I'd like..."<br>
+      • ¿Vas a quejarte? → molde: "There's a problem with..." / "This isn't what I..."<br>
+      • ¿Vas a preguntar ubicación/info? → molde: "Do you know if...?" / "Is there a...?"<br>
+      • ¿Vas a dar tu opinión con duda? → molde: "I'm not sure, but I think..."<br><br>
+      El molde ya trae la gramática correcta integrada — tú solo rellenas. Esto es exactamente lo que hacen las pestañas de Para viajar y Narración interna: te dan el molde ya armado para que dejes de improvisar gramática en tiempo real.
+    `},
+    {t:"Suelta el filtro de 'tiene que sonar perfecto'", body:`
+      A tu nivel, el freno ya no es de vocabulario — es de autoexigencia. Te frenas a media oración para corregirte y eso te hace sonar MENOS fluido que si terminaras la idea con un error menor.<br><br>
+      Prioridad real en conversación: <b>termina la idea primero, corrige después si hace falta.</b> Un nativo entiende "I go there yesterday" perfectamente aunque el tiempo verbal esté mal — lo que rompe la comunicación es el silencio y la duda, no el error gramatical menor.
+    `},
+    {t:"Ejercicio para aplicar esto hoy mismo", body:`
+      Antes de cualquier conversación real (pedir algo, preguntar algo), tómate 2 segundos y decide primero el molde (pestaña Pensar en inglés / Para viajar), no el contenido. Rellena el molde en tu cabeza, y suéltalo aunque no esté perfecto.<br><br>
+      Combínalo con la pestaña de Narración interna — practicando el proceso completo (elegir molde → rellenar → soltar) todo el día contigo mismo, cuando llegue el momento real ya no lo estás improvisando desde cero.
+    `}
+  ]
+},
+{
+  id:"frases", label:"Frases comunes",
+  intro:"Banco grande de frases de poder, preguntas/respuestas y plantillas replicables — para que vivan en tu vocabulario, no en tu cabeza traducidas.",
+  cards:[
+    {t:"Pedir y dar opinión", body:`
+      • <b>What's your take on this?</b> — ¿cuál es tu opinión/perspectiva?<br>
+      • <b>How do you feel about ___?</b> — más suave que "what do you think", invita opinión personal.<br>
+      • <b>If you ask me, ___</b> — para dar tu opinión sin sonar impositivo.<br>
+      • <b>I could be wrong, but ___</b> — opinión con humildad, muy natural en inglés.<br>
+      • <b>From my experience, ___</b> — le da peso a tu opinión sin sonar categórico.<br>
+      • <b>I see it differently.</b> — para dar tu opinión contraria sin ser agresivo.<br>
+      • <b>That's a fair point, but ___</b> — reconoces algo antes de contraargumentar.<br>
+      • <b>I don't have a strong opinion either way.</b> — te es indiferente, sin sonar cortante.<br>
+      • <b>Where do you stand on ___?</b> — preguntar postura en un tema.<br>
+      • <b>I'm on the fence about it.</b> — no te has decidido todavía.
+    `},
+    {t:"Acuerdo y desacuerdo", body:`
+      • <b>I couldn't agree more.</b> — acuerdo total, más natural que "I totally agree".<br>
+      • <b>You have a point.</b> — reconoces algo válido aunque no estés 100% de acuerdo.<br>
+      • <b>I see where you're coming from, but ___</b> — validas antes de disentir, muy usado.<br>
+      • <b>I'm not so sure about that.</b> — desacuerdo suave.<br>
+      • <b>That's not quite how I see it.</b> — desacuerdo educado.<br>
+      • <b>Fair enough.</b> — aceptas el punto del otro, cierre de discusión sin ceder del todo.<br>
+      • <b>Agree to disagree.</b> — para cerrar un desacuerdo sin pelear.<br>
+      • <b>I beg to differ.</b> — desacuerdo directo pero elegante, un poco formal.<br>
+      • <b>Exactly my thoughts.</b> — acuerdo entusiasta.<br>
+      • <b>That's debatable.</b> — no estás de acuerdo del todo, sin confrontar.
+    `},
+    {t:"Sorpresa", body:`
+      • <b>No way!</b> — no puede ser, muy usado e informal.<br>
+      • <b>You're kidding me.</b> — expresa incredulidad.<br>
+      • <b>I did not see that coming.</b> — no lo esperabas para nada.<br>
+      • <b>That caught me off guard.</b> — te tomó desprevenido.<br>
+      • <b>Wait, seriously?</b> — sorpresa + pedir confirmación.<br>
+      • <b>That's wild.</b> — muy coloquial, "qué locura".<br>
+      • <b>I wasn't expecting that at all.</b><br>
+      • <b>Well, that's unexpected.</b> — más neutral/formal.<br>
+      • <b>Get out of here!</b> — coloquial, sorpresa incrédula (no literal "sal de aquí").<br>
+      • <b>You've got to be kidding.</b>
+    `},
+    {t:"Duda e incertidumbre", body:`
+      • <b>I'm not 100% sure, but ___</b><br>
+      • <b>Don't quote me on this, but ___</b> — das info sin garantizar que sea exacta.<br>
+      • <b>I could be way off, but ___</b><br>
+      • <b>It's hard to say.</b><br>
+      • <b>Your guess is as good as mine.</b> — ni tú lo sabes.<br>
+      • <b>I'm still trying to wrap my head around it.</b> — todavía no lo entiendes/procesas bien.<br>
+      • <b>Something doesn't add up.</b> — sospechas que algo no cuadra.<br>
+      • <b>I have a hunch that ___</b> — presientes algo sin prueba.<br>
+      • <b>Beats me.</b> — muy coloquial, "ni idea".<br>
+      • <b>I'm second-guessing myself.</b> — estás dudando de tu propia decisión.
+    `},
+    {t:"Ánimo y apoyo", body:`
+      • <b>You've got this.</b> — tú puedes, muy usado.<br>
+      • <b>Hang in there.</b> — aguanta, para alguien pasando un mal momento.<br>
+      • <b>That's rough, I'm sorry.</b> — empatía directa.<br>
+      • <b>I'm here if you need anything.</b><br>
+      • <b>Don't be so hard on yourself.</b><br>
+      • <b>It'll work itself out.</b> — todo se va a resolver.<br>
+      • <b>You did the best you could.</b><br>
+      • <b>Take your time.</b><br>
+      • <b>I'm rooting for you.</b> — te estoy apoyando/echando porras.<br>
+      • <b>Chin up.</b> — anímate, coloquial.
+    `},
+    {t:"Disculpas — con distintos niveles de peso", body:`
+      • <b>My bad.</b> — muy informal, error pequeño.<br>
+      • <b>Sorry about that.</b> — neutral, el default seguro.<br>
+      • <b>I didn't mean for that to happen.</b><br>
+      • <b>That's on me.</b> — asumes responsabilidad directa.<br>
+      • <b>I should've been more careful.</b><br>
+      • <b>I owe you an apology.</b> — más formal/serio.<br>
+      • <b>I'm really sorry for the inconvenience.</b> — contexto de servicio/formal.<br>
+      • <b>There's no excuse for that.</b> — reconoces error sin justificarte.<br>
+      • <b>Let me make it up to you.</b> — ofreces compensar.<br>
+      • <b>I'll try not to let it happen again.</b>
+    `},
+    {t:"Agradecimiento — de casual a profundo", body:`
+      • <b>Thanks a lot.</b> — default neutral.<br>
+      • <b>I really appreciate it.</b> — un nivel más arriba, sincero.<br>
+      • <b>You have no idea how much this helps.</b> — muy agradecido.<br>
+      • <b>I owe you one.</b> — te debo una, coloquial.<br>
+      • <b>That means a lot to me.</b> — agradecimiento emocional.<br>
+      • <b>Thanks for having my back.</b> — por apoyarte/respaldarte.<br>
+      • <b>I can't thank you enough.</b> — muy sincero.<br>
+      • <b>You're a lifesaver.</b> — me salvaste, coloquial y muy usado.
+    `},
+    {t:"Pedir un favor", body:`
+      • <b>Could you do me a favor?</b> — abre el pedido, casi siempre antes de pedir algo.<br>
+      • <b>Would it be too much to ask if ___?</b> — favor un poco grande, cortés.<br>
+      • <b>I hate to ask, but ___</b> — suaviza un pedido incómodo.<br>
+      • <b>Any chance you could ___?</b> — informal, muy natural.<br>
+      • <b>I'd owe you big time.</b> — para pedidos grandes, coloquial.<br>
+      • <b>Mind helping me with ___?</b> — casual, directo.<br>
+      • <b>Would you be able to ___?</b> — verifica disponibilidad antes de pedir.
+    `},
+    {t:"Negociar y llegar a un punto medio", body:`
+      • <b>Can we meet halfway?</b> — llegar a un acuerdo medio.<br>
+      • <b>What if we compromise on ___?</b><br>
+      • <b>I can work with that.</b> — aceptas una propuesta.<br>
+      • <b>That works for me.</b><br>
+      • <b>Let's find a middle ground.</b><br>
+      • <b>I'm flexible on ___, but not on ___.</b> — marcas dónde sí y no cedes.<br>
+      • <b>Would you be open to ___?</b><br>
+      • <b>That's a dealbreaker for me.</b> — algo con lo que no puedes ceder.
+    `},
+    {t:"Indiferencia — sin sonar grosero", body:`
+      • <b>I'm easy either way.</b> — me da igual, en buen tono.<br>
+      • <b>Whatever works for you.</b><br>
+      • <b>I don't have a preference.</b><br>
+      • <b>It's all the same to me.</b><br>
+      • <b>Makes no difference to me.</b><br>
+      • <b>I could go either way on this.</b>
+    `},
+    {t:"Estar ocupado o sin tiempo", body:`
+      • <b>I'm swamped right now.</b> — muy ocupado, coloquial.<br>
+      • <b>Can I get back to you on that?</b> — pides tiempo para responder.<br>
+      • <b>I'm in the middle of something.</b><br>
+      • <b>Let me circle back to this later.</b> — regresar a un tema después, muy usado en contexto laboral.<br>
+      • <b>I don't have the bandwidth for that right now.</b> — no tienes capacidad mental/tiempo, más de contexto laboral.<br>
+      • <b>Can we pick this up later?</b> — retomar algo después.
+    `},
+    {t:"Dar una mala noticia con tacto", body:`
+      • <b>I'm afraid I have some bad news.</b><br>
+      • <b>There's no easy way to say this, but ___</b><br>
+      • <b>Unfortunately, ___</b><br>
+      • <b>I hate to be the one to tell you this, but ___</b><br>
+      • <b>It's not what you were hoping to hear, but ___</b><br>
+      • <b>I wish I had better news.</b>
+    `},
+    {t:"Confirmar que entendiste bien", body:`
+      • <b>So, just to confirm, ___?</b><br>
+      • <b>If I understood correctly, ___?</b><br>
+      • <b>Let me make sure I've got this right.</b><br>
+      • <b>So what you're saying is ___?</b><br>
+      • <b>Correct me if I'm wrong, but ___?</b><br>
+      • <b>Just so we're on the same page, ___?</b>
+    `},
+    {t:"Frustración de forma educada", body:`
+      • <b>This is getting a bit frustrating.</b><br>
+      • <b>I'm a little confused about why ___</b><br>
+      • <b>This isn't quite what I expected.</b><br>
+      • <b>I have to admit, this is testing my patience.</b><br>
+      • <b>Can we find a better way to handle this?</b><br>
+      • <b>I'd really appreciate it if this could move faster.</b>
+    `},
+    {t:"Petición indirecta muy natural", body:`
+      • <b>I don't suppose you could ___?</b> — muy educado, común en inglés británico/formal.<br>
+      • <b>It'd be great if you could ___</b><br>
+      • <b>Any chance of ___?</b><br>
+      • <b>I was wondering if you could possibly ___</b><br>
+      • <b>If it's not too much trouble, could you ___?</b>
+    `},
+    {t:"Futuro con incertidumbre", body:`
+      • <b>I might end up ___ing.</b><br>
+      • <b>There's a chance I'll ___</b><br>
+      • <b>I'm leaning towards ___ing.</b> — te estás inclinando por algo.<br>
+      • <b>It's up in the air.</b> — todavía no está decidido.<br>
+      • <b>We'll see how it goes.</b><br>
+      • <b>I'll play it by ear.</b> — decidirás según cómo se den las cosas, muy usado.
+    `},
+    {t:"Certeza y convicción", body:`
+      • <b>I'm positive about this.</b><br>
+      • <b>There's no doubt in my mind.</b><br>
+      • <b>I'd bet on it.</b> — coloquial, muy seguro.<br>
+      • <b>I'm one hundred percent sure.</b><br>
+      • <b>Trust me on this one.</b><br>
+      • <b>Mark my words.</b> — vas a ver que tengo razón, enfático.
+    `},
+    {t:"Reconexión social (encontrarte a alguien)", body:`
+      • <b>How's life been treating you?</b> — más natural que "how are you".<br>
+      • <b>It's been a while!</b><br>
+      • <b>What have you been up to?</b> — pregunta abierta de reconexión.<br>
+      • <b>Long time no see.</b><br>
+      • <b>So, what's new with you?</b><br>
+      • <b>Catch me up on everything.</b> — pídeles que te pongan al día.<br>
+      • <b>Same old, same old.</b> — respuesta casual de "nada nuevo".<br>
+      • <b>Can't complain.</b> — respuesta neutral-positiva muy común a "how are you".
+    `},
+    {t:"Estructuras replicables — plantillas de poder", tag:["teal","Estas generan infinitas frases nuevas, no son frases fijas"], body:`
+      • <b>It's not that ___, it's just that ___</b> — matiza una razón sin sonar tajante. "It's not that I don't want to go, it's just that I'm exhausted."<br>
+      • <b>The more I ___, the more I ___</b> — relación proporcional. "The more I think about it, the more I like the idea."<br>
+      • <b>What if we just ___ instead?</b> — propones alternativa suave.<br>
+      • <b>There's no way I could ___</b> — imposibilidad enfática. "There's no way I could finish this today."<br>
+      • <b>I'd rather ___ than ___</b> — preferencia clara. "I'd rather walk than wait for a cab."<br>
+      • <b>As far as I'm concerned, ___</b> — desde tu perspectiva, con peso.<br>
+      • <b>It's one thing to ___, but it's another to ___</b> — contrastas dos niveles de dificultad/compromiso. "It's one thing to say it, but it's another to actually do it."<br>
+      • <b>Whether or not ___, I still ___</b> — independientemente de la condición. "Whether or not it rains, I'm still going."<br>
+      • <b>The last thing I want is to ___</b> — evitas algo con énfasis. "The last thing I want is to be rude."<br>
+      • <b>If anything, ___</b> — matizas o incluso refuerzas lo contrario de lo esperado. "If anything, this made me more motivated."<br>
+      • <b>At the end of the day, ___</b> — conclusión que prioriza lo esencial.<br>
+      • <b>Say what you want, but ___</b> — defiendes tu punto pese a críticas. "Say what you want, but it worked."<br>
+      • <b>Not gonna lie, ___</b> — introduces una confesión honesta, muy coloquial.<br>
+      • <b>Chances are, ___</b> — probablemente. "Chances are, they already know."<br>
+      • <b>The way I see it, ___</b> — igual que "as far as I'm concerned" pero más coloquial.
+    `}
+  ]
+},
+{
+  id:"narracion", label:"Narración interna",
+  intro:"Frases para narrar tu día en tu cabeza mientras haces la actividad real — así se automatiza la construcción.",
+  cards:[
+    {t:"Lo que hago ahora mismo", body:`<div class="phrase-grid">
+      <div class="phrase">I'm getting ready to leave</div>
+      <div class="phrase">I'm running a bit late</div>
+      <div class="phrase">I usually do this first</div>
+      <div class="phrase">I'm trying to figure out where I put my keys</div>
+      <div class="phrase">This always takes longer than I expect</div>
+      <div class="phrase">I'm not used to this yet</div>
+      <div class="phrase">I keep forgetting where I left this</div>
+    </div>`},
+    {t:"Lo que acabo de hacer", body:`<div class="phrase-grid">
+      <div class="phrase">I just finished ___</div>
+      <div class="phrase">I completely forgot to ___</div>
+      <div class="phrase">I ended up ___ing</div>
+      <div class="phrase">That took way longer than I thought</div>
+      <div class="phrase">I wasn't expecting that</div>
+      <div class="phrase">I almost forgot my ___</div>
+      <div class="phrase">I could've handled that better</div>
+    </div>`},
+    {t:"Acumulando experiencia o estado (present perfect)", body:`<div class="phrase-grid">
+      <div class="phrase">I've already done this twice today</div>
+      <div class="phrase">I still haven't figured out ___</div>
+      <div class="phrase">I've been meaning to ___</div>
+      <div class="phrase">I've never done this before</div>
+      <div class="phrase">I've gotten pretty good at ___</div>
+      <div class="phrase">This has been bothering me all day</div>
+    </div>`},
+    {t:"Planeando en tiempo real", body:`<div class="phrase-grid">
+      <div class="phrase">I'm going to need more time for this</div>
+      <div class="phrase">I'll deal with that later</div>
+      <div class="phrase">I should probably ___ before I forget</div>
+      <div class="phrase">I'm about to ___</div>
+      <div class="phrase">By the time I get there, it'll probably be ___</div>
+      <div class="phrase">I won't have time to ___ if I don't hurry</div>
+    </div>`},
+    {t:"Planes futuros más lejanos", body:`<div class="phrase-grid">
+      <div class="phrase">I'm thinking about ___ next month</div>
+      <div class="phrase">I might end up ___ if things work out</div>
+      <div class="phrase">I still haven't decided whether to ___</div>
+      <div class="phrase">Once I sort this out, I'll ___</div>
+      <div class="phrase">I'm hoping to ___ before I leave</div>
+    </div>`},
+    {t:"Evaluando opciones (condicionales)", tag:["teal","Aquí es donde más se nota fluidez real"], body:`<div class="phrase-grid">
+      <div class="phrase">If I leave now, I'll make it</div>
+      <div class="phrase">If I don't hurry, I'm going to be late</div>
+      <div class="phrase">I would've done this differently</div>
+      <div class="phrase">I should've brought ___</div>
+      <div class="phrase">If I had known, I would've ___</div>
+      <div class="phrase">Even if I rush, I probably won't make it</div>
+    </div>`},
+    {t:"Matizando certeza u obligación (modales)", body:`<div class="phrase-grid">
+      <div class="phrase">I might as well just ___</div>
+      <div class="phrase">I should really ___</div>
+      <div class="phrase">I probably shouldn't have ___</div>
+      <div class="phrase">I could always ___ if this doesn't work</div>
+      <div class="phrase">I must be forgetting something</div>
+      <div class="phrase">I may as well wait here</div>
+    </div>`},
+    {t:"Conectores tejidos en la narración", body:`<div class="phrase-grid">
+      <div class="phrase">Even though I'm tired, I should still ___</div>
+      <div class="phrase">Given that it's already late, I'll just ___</div>
+      <div class="phrase">In case I forget, let me ___ now</div>
+      <div class="phrase">As long as I leave by ___, I'll be fine</div>
+      <div class="phrase">Now that I think about it, I should ___</div>
+      <div class="phrase">The thing is, I still need to ___</div>
+    </div>`},
+    {t:"Resolviendo un problema en el momento", body:`<div class="phrase-grid">
+      <div class="phrase">Okay, let me think about this for a second</div>
+      <div class="phrase">There has to be another way to do this</div>
+      <div class="phrase">I'll just figure it out as I go</div>
+      <div class="phrase">Let me try a different approach</div>
+      <div class="phrase">This isn't working, I need a plan B</div>
+    </div>`},
+    {t:"Expresando opinión o duda", body:`<div class="phrase-grid">
+      <div class="phrase">I'm not sure, but I think ___</div>
+      <div class="phrase">Honestly, I don't know if this is a good idea</div>
+      <div class="phrase">Part of me thinks I should just ___</div>
+      <div class="phrase">I keep going back and forth on this</div>
+      <div class="phrase">I have a feeling this isn't going to work</div>
+    </div>`},
+    {t:"Describiendo lo que veo o el entorno", body:`<div class="phrase-grid">
+      <div class="phrase">This place is nothing like I imagined</div>
+      <div class="phrase">There's a lot more people than I expected</div>
+      <div class="phrase">It's a lot quieter than I thought it'd be</div>
+      <div class="phrase">I didn't notice that before</div>
+      <div class="phrase">This reminds me a bit of ___</div>
+    </div>`},
+    {t:"Narrando una compra o transacción", body:`<div class="phrase-grid">
+      <div class="phrase">This is more expensive than I expected</div>
+      <div class="phrase">I should probably compare prices first</div>
+      <div class="phrase">I'll just go with this one</div>
+      <div class="phrase">I don't think I need this after all</div>
+      <div class="phrase">Let me count my change real quick</div>
+    </div>`},
+    {t:"Tareas pendientes y trabajo", body:`<div class="phrase-grid">
+      <div class="phrase">I still have a few things to sort out</div>
+      <div class="phrase">I'll get to that once I'm done with this</div>
+      <div class="phrase">This is taking way longer than it should</div>
+      <div class="phrase">I need to follow up on ___</div>
+      <div class="phrase">Let me knock this out real quick</div>
+    </div>`},
+    {t:"Frustración o cansancio (registro natural, no de libro)", body:`<div class="phrase-grid">
+      <div class="phrase">This is getting old</div>
+      <div class="phrase">I'm so done with this today</div>
+      <div class="phrase">Not this again</div>
+      <div class="phrase">I really don't have the energy for this right now</div>
+      <div class="phrase">Whatever, I'll deal with it tomorrow</div>
+    </div>`},
+    {t:"Reflexionando al final del día", body:`<div class="phrase-grid">
+      <div class="phrase">Today turned out better than I expected</div>
+      <div class="phrase">I probably could've handled that differently</div>
+      <div class="phrase">Overall, it wasn't a bad day</div>
+      <div class="phrase">I learned something new today</div>
+      <div class="phrase">Tomorrow I'll try to ___</div>
+    </div>`},
+    {t:"Interactuando con desconocidos o servicio", body:`<div class="phrase-grid">
+      <div class="phrase">I should probably ask before I assume</div>
+      <div class="phrase">Let me just double check that I understood right</div>
+      <div class="phrase">I don't want to come across as rude, but ___</div>
+      <div class="phrase">I'll just wait for them to finish before I ask</div>
+    </div>`}
+  ]
+},
+{
+  id:"consejos", label:"Consejos",
+  intro:"Herramientas específicas, no consejos genéricos de blog — cómo entrenar esto de verdad.",
+  cards:[
+    {t:"El delay de 2 segundos", tag:["teal","Para construir antes de hablar, no mientras hablas"], body:`
+      Antes de responder algo que requiere una oración un poco elaborada, date exactamente 2 segundos de silencio para armar la frase completa en tu cabeza (elige el molde, ver pestaña Pensar en inglés) antes de soltarla.<br><br>
+      Es mejor un silencio de 2 segundos que una oración que empiezas, te trabas, corriges y vuelves a empezar — eso último es lo que realmente suena inseguro, no la pausa.
+    `},
+    {t:"Grabación + transcripción — tu auto-diagnóstico real", body:`
+      Graba 60 segundos hablando en inglés sobre tu día (usa el dictado del iPhone o cualquier app de notas con transcripción). Lee la transcripción y marca tus propios errores.<br><br>
+      Esto te expone tus patrones REALES, no los que crees que tienes — normalmente son 2 o 3 errores que se repiten una y otra vez, y una vez que los ves escritos son mucho más fáciles de corregir que "al oído".
+    `},
+    {t:"Una corrección por conversación", body:`
+      No intentes sonar perfecto en todo a la vez. Elige UN punto específico de esta guía (por ejemplo, Present Perfect vs Past Simple) y enfócate SOLO en ese durante una conversación completa. La siguiente semana cambias de foco a otro punto.<br><br>
+      Intentar corregir todo al mismo tiempo es lo que te hace sentir abrumado y trabado — enfocar un solo punto a la vez sí genera cambio real y medible.
+    `},
+    {t:"Shadowing con sustitución, no repetición exacta", body:`
+      El shadowing normal (repetir exacto lo que escuchas) entrena oído y pronunciación, pero no producción propia. Súbele un nivel: cuando hagas shadowing, sustituye una palabra por la tuya, forzándote a improvisar dentro de la estructura del hablante nativo en tiempo real.<br><br>
+      Ejemplo: si el video dice "I'm heading to the store", tú di en voz alta "I'm heading to the gym" — mismo molde, contenido tuyo.
+    `},
+    {t:"Buffer de 3 frases para nunca quedarte en silencio muerto", body:`
+      Memoriza estas 3 frases como reflejo automático para ganar tiempo real mientras piensas la respuesta completa, en vez de quedarte callado (que es lo que realmente se siente como "no saber inglés"):<br><br>
+      • "That's a good question, let me think." · "I mean..." · "How do I put this..."<br><br>
+      Practica soltarlas automáticamente apenas sientas la pausa venir — antes de pensar el contenido, no después.
+    `},
+    {t:"Voice journaling — 2 minutos al final del día", body:`
+      Sin escribir nada, habla en voz alta durante 2 minutos narrando qué pasó en tu día, en inglés. Es la versión concentrada de la pestaña de Narración interna, pero en formato de práctica dedicada y medible — notarás en unas semanas que cada vez te trabas menos y hablas más rápido.
+    `},
+    {t:"La regla de las 3 preguntas de seguimiento", body:`
+      En conversación social, no te limites a responder — después de contestar algo, haz tú una pregunta de seguimiento relacionada ("That's interesting, what got you into that?"). Repite esto 3 veces por conversación como mínimo.<br><br>
+      Esto es lo que hace que una conversación se sienta fluida y natural en vez de una entrevista de pregunta-respuesta — y de paso te da más tiempo hablando de lo que el otro dice, menos presión de producir tú todo el contenido.
+    `}
+  ]
+},
+{
+  id:"diagnostico", label:"Diagnóstico",
+  intro:"Duda cotidiana → qué revisar. Muchos ejemplos, para que encuentres el tuyo rápido.",
+  cards:[
+    {t:"Dudas de gramática", body:`
+      <table>
+      <tr><th>Duda</th><th>Qué revisar</th></tr>
+      <tr><td>¿Past Simple o Present Perfect?</td><td>¿Hay fecha específica? Sí → Past Simple. No / sigue abierto → Present Perfect.</td></tr>
+      <tr><td>¿"since" o "for"?</td><td>since = punto donde empezó. for = duración.</td></tr>
+      <tr><td>¿Necesito Past Perfect aquí?</td><td>¿Hay dos eventos pasados y el orden importa? Sí → Past Perfect para el más antiguo.</td></tr>
+      <tr><td>¿Qué modal para posibilidad?</td><td>Informal → might. Formal/escrito → may. Sugerencia → could.</td></tr>
+      <tr><td>¿"don't have to" o "mustn't"?</td><td>don't have to = opcional. mustn't = prohibido. Son opuestos, no sinónimos.</td></tr>
+      <tr><td>¿"used to" o "would"?</td><td>Estado (vivir, tener, ser) → solo used to. Acción repetida → cualquiera.</td></tr>
+      <tr><td>¿Gerundio o infinitivo después del verbo?</td><td>Revisa si el verbo cambia de significado (stop to/doing, remember to/doing) en Errores típicos.</td></tr>
+      </table>
+    `},
+    {t:"Dudas de vocabulario y registro", body:`
+      <table>
+      <tr><th>Duda</th><th>Qué revisar</th></tr>
+      <tr><td>¿"make" o "do"?</td><td>make = crear/decidir (mistake, decision, plan). do = actividad/tarea (homework, favor, exercise).</td></tr>
+      <tr><td>¿La palabra que quiero usar es un false friend?</td><td>Revisa la lista en Errores típicos antes de usarla si no estás 100% seguro.</td></tr>
+      <tr><td>¿Qué preposición va con este verbo/adjetivo?</td><td>Revisa la lista de preposiciones fijas en Errores típicos — no calques del español.</td></tr>
+      <tr><td>¿Sueno muy formal o muy informal?</td><td>Could you...? es tu default seguro. Sube a "would you mind" en contexto formal, baja a "can you" con confianza.</td></tr>
+      <tr><td>¿Cómo pido algo sin sonar brusco?</td><td>Revisa los niveles de cortesía en la tarjeta de modales "can/could/would you".</td></tr>
+      </table>
+    `},
+    {t:"Dudas en conversación real (en vivo)", body:`
+      <table>
+      <tr><th>Situación</th><th>Qué hacer</th></tr>
+      <tr><td>No entendiste lo que dijeron</td><td>"Sorry, could you say that again a bit slower?" — pestaña Para viajar tiene más opciones.</td></tr>
+      <tr><td>Te quedas en silencio pensando</td><td>Usa el buffer de 3 frases de la pestaña Consejos en vez de quedarte callado.</td></tr>
+      <tr><td>Empezaste una oración y te trabaste</td><td>Termina la idea aunque tenga un error menor — no te detengas a corregir a medias.</td></tr>
+      <tr><td>No sabes si lo que vas a decir suena traducido</td><td>Revisa si estás pensando en español primero — aplica el método de la pestaña Pensar en inglés.</td></tr>
+      <tr><td>La conversación se siente forzada / de entrevista</td><td>Aplica la regla de las 3 preguntas de seguimiento (pestaña Consejos).</td></tr>
+      <tr><td>Sientes que hablas "correcto" pero robótico</td><td>Te faltan conectores naturales y muletillas de relleno — revisa esas dos tarjetas en Conectores.</td></tr>
+      </table>
+    `}
+  ]
+},
+{
+  id:"soluciones", label:"Soluciones",
+  intro:"Problemas cotidianos ya resueltos — el script completo, no la teoría de qué deberías hacer.",
+  cards:[
+    {t:"Me equivoqué de pedido en un restaurante", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>Sorry, I think there's been a mix-up — I actually ordered the [X], not this. Could you fix that for me?</div><div class="ln"><span class="who">Staff</span>No worries, I'll get that sorted right away.</div></div>
+    `},
+    {t:"No entendí lo que me dijeron y me da pena preguntar de nuevo", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>Sorry, I didn't quite catch that — could you say it one more time, maybe a bit slower?</div></div>
+      Si sigue sin quedar claro: "Sorry, could you say that in a simpler way? My English is good but sometimes I miss things when people speak fast."
+    `},
+    {t:"Me cobraron de más y necesito reclamar sin conflicto", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>Hi, I think there might be a mistake on this charge — could you take a look?</div><div class="ln"><span class="who">Staff</span>Let me check... you're right, I'll fix that.</div></div>
+    `},
+    {t:"Necesito cancelar una reservación sin dar muchas explicaciones", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>Hi, I need to cancel my reservation for [date]. Something came up.</div><div class="ln"><span class="who">Staff</span>No problem, I've cancelled it.</div></div>
+    `},
+    {t:"Quiero pedir descuento o negociar precio", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>That's a bit more than I wanted to spend — is there any flexibility on the price?</div><div class="ln"><span class="who">Vendedor</span>I can do [precio] for you.</div><div class="ln"><span class="who">Tú</span>Deal, I'll take it.</div></div>
+    `},
+    {t:"Alguien me habla muy rápido y me estoy perdiendo", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>Sorry to interrupt — could you slow down just a little? I want to make sure I follow everything.</div></div>
+    `},
+    {t:"Necesito hablar con mi casero sobre un problema", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>Hi, there's an issue with [the water heater] in the apartment — could someone come take a look this week?</div><div class="ln"><span class="who">Casero</span>Sure, I'll send someone tomorrow.</div></div>
+    `},
+    {t:"Quiero escribir una queja formal por email", body:`
+      Subject: Issue with [order/service] — [reference number]<br><br>
+      Hi, I'm writing about [describe the issue briefly]. I'd appreciate it if this could be resolved by [date/action you want]. Please let me know how you'd like to proceed. Thank you.
+    `},
+    {t:"Estoy en una plática de trabajo informal y necesito presentarme bien", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>Hi, I'm Vicente — I work as a personal transformation consultant, mostly helping people navigate big life changes.</div><div class="ln"><span class="who">Otra persona</span>That sounds interesting, how'd you get into that?</div><div class="ln"><span class="who">Tú</span>It actually came from my background in People &amp; Culture — I noticed a lot of people hit a point where things look fine on the outside but feel off, so I started working with that directly.</div></div>
+    `},
+    {t:"No entendí una referencia cultural o un chiste", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>Sorry, I'm not familiar with that — could you explain it to me? I'm still learning the local context.</div></div>
+      No te quedes riendo sin entender — preguntar directo se ve mucho mejor que fingir.
+    `},
+    {t:"Necesito describir síntomas de salud con precisión", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>I've had a headache and a slight fever since yesterday, and I feel really tired.</div><div class="ln"><span class="who">Doctor</span>Any other symptoms? Nausea, cough?</div><div class="ln"><span class="who">Tú</span>A bit of nausea, no cough.</div></div>
+    `},
+    {t:"Quiero hacer small talk con un colega sin que se sienta forzado", body:`
+      <div class="dlg"><div class="ln"><span class="who">Tú</span>How's your week going so far?</div><div class="ln"><span class="who">Colega</span>Pretty busy, you?</div><div class="ln"><span class="who">Tú</span>Same here. Any plans for the weekend?</div></div>
+    `}
+  ]
+}
+];
+
+const tabBar = document.getElementById('tabBar');
+const main = document.getElementById('main');
+
+DATA.forEach((sec, i) => {
+  const tab = document.createElement('div');
+  tab.className = 'tab' + (i===0 ? ' active' : '');
+  tab.textContent = sec.label;
+  tab.dataset.id = sec.id;
+  tab.onclick = () => selectTab(sec.id);
+  tabBar.appendChild(tab);
+
+  const section = document.createElement('div');
+  section.className = 'section' + (i===0 ? ' active' : '');
+  section.id = 'sec-' + sec.id;
+
+  let html = `<p class="section-intro">${sec.intro}</p>`;
+  sec.cards.forEach((c, idx) => {
+    let tagHtml = '';
+    if(c.tag){
+      tagHtml = `<span class="tag ${c.tag[0]}">${c.tag[1]}</span><br>`;
+    }
+    html += `
+    <div class="card" data-card="${sec.id}-${idx}">
+      <div class="card-head" onclick="toggleCard('${sec.id}-${idx}')">
+        <span class="t">${c.t}</span>
+        <span class="chev">&#9662;</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">${tagHtml}${c.body}</div>
+      </div>
+    </div>`;
+  });
+  section.innerHTML = html;
+  main.appendChild(section);
+});
+
+function selectTab(id){
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.id === id));
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'sec-' + id));
+  window.scrollTo(0,0);
+}
+
+function toggleCard(key){
+  const card = document.querySelector(`.card[data-card="${key}"]`);
+  card.classList.toggle('open');
+}
+</script>
+</body>
+</html>
